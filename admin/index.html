@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Herbal Haven — Owner tools</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500;1,9..144,600&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#F6F1E6; --cream-soft:#FBF8F2; --paper:#FFFFFF;
+    --forest:#25391F; --forest-dark:#182611;
+    --sage:#7F9271; --sage-light:#E7ECDC;
+    --clay:#B98A4E; --clay-light:#F1E4CC;
+    --ink:#2B2A22; --ink-soft:#6B6A5C; --line:#E3D9C2;
+    --shadow:0 14px 34px rgba(30,45,22,0.10);
+    --radius-pill:999px;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; background:var(--cream); color:var(--ink); font-family:'Work Sans', sans-serif; -webkit-font-smoothing:antialiased; min-height:100vh;}
+  h1,h2,h3{font-family:'Fraunces',serif; color:var(--forest); margin:0; line-height:1.1; font-weight:500;}
+  p{margin:0; color:var(--ink-soft); line-height:1.6;}
+  a{color:inherit; text-decoration:none;}
+  button{font-family:inherit; cursor:pointer; border:none; background:none; color:inherit;}
+  svg{display:block; max-width:100%;}
+  .icon{width:20px; height:20px;}
+
+  .admin-shell{max-width:980px; margin:0 auto; padding:40px 32px 80px;}
+  .admin-topbar{display:flex; align-items:center; justify-content:space-between; gap:16px; padding-bottom:22px; border-bottom:1px solid var(--line); margin-bottom:28px;}
+  .admin-brand{display:flex; align-items:center; gap:10px;}
+  .admin-brand svg{width:32px; height:32px; color:var(--forest);}
+  .admin-brand strong{font-family:'Fraunces',serif; font-size:1.15rem; color:var(--forest); font-style:italic; font-weight:600;}
+  .admin-brand span{display:block; font-size:0.62rem; letter-spacing:0.14em; color:var(--ink-soft); font-weight:600;}
+  .admin-back{font-size:0.82rem; color:var(--forest); font-weight:600; display:inline-flex; align-items:center; gap:6px; padding:8px 14px; border-radius:var(--radius-pill); border:1px solid var(--line);}
+  .admin-back:hover{background:var(--sage-light);}
+
+  .admin-head h1{font-size:1.6rem; margin-bottom:6px;}
+  .admin-head p{font-size:0.88rem; margin-bottom:20px;}
+
+  .admin-note{background:var(--sage-light); border-left:3px solid var(--sage); border-radius:10px; padding:14px 18px; font-size:0.84rem; color:var(--ink-soft); margin-bottom:26px;}
+  .admin-note strong{color:var(--forest);}
+  .admin-note code{background:rgba(37,57,31,0.08); padding:1px 6px; border-radius:4px; font-size:0.82em;}
+
+  /* Warning shown when opened from file:// (no server) */
+  .admin-fatal{
+    background:#FBE9E4; border-left:3px solid #B4472F; border-radius:10px;
+    padding:16px 18px; font-size:0.88rem; color:#7A2415; margin-bottom:26px;
+    display:none;
+  }
+  .admin-fatal.show{display:block;}
+  .admin-fatal strong{display:block; margin-bottom:6px; font-size:0.95rem;}
+  .admin-fatal code{background:rgba(122,36,21,0.08); padding:1px 6px; border-radius:4px; font-size:0.82em;}
+  .admin-fatal pre{
+    background:rgba(122,36,21,0.06); padding:10px 12px; border-radius:8px;
+    font-size:0.78rem; margin-top:10px; overflow-x:auto;
+  }
+
+  .admin-actions-bar{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:24px;}
+  .btn{display:inline-flex; align-items:center; gap:8px; padding:11px 20px; border-radius:var(--radius-pill); font-weight:600; font-size:0.88rem; transition:background 0.15s ease, transform 0.15s ease;}
+  .btn:hover{transform:translateY(-1px);}
+  .btn-primary{background:var(--forest); color:var(--cream-soft);}
+  .btn-primary:hover{background:var(--forest-dark);}
+  .btn-ghost{border:1px solid var(--line); color:var(--forest); background:none;}
+  .btn-ghost:hover{background:var(--sage-light);}
+  .btn svg{width:15px; height:15px;}
+  .btn[disabled]{opacity:0.45; cursor:not-allowed; transform:none;}
+
+  .admin-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:18px;}
+
+  .admin-card{background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:16px; display:flex; gap:16px; align-items:center;}
+  .admin-thumb{width:80px; height:80px; border-radius:10px; background:var(--sage-light); flex-shrink:0; display:flex; align-items:center; justify-content:center; padding:14px; color:var(--forest); overflow:hidden; position:relative;}
+  .admin-thumb svg{width:100%; height:100%;}
+  .admin-thumb img{width:100%; height:100%; object-fit:cover; position:absolute; inset:0;}
+  .admin-info{flex:1; min-width:0;}
+  .admin-name{font-weight:600; color:var(--forest); font-size:0.95rem; font-family:'Fraunces',serif;}
+  .admin-meta{font-size:0.78rem; color:var(--ink-soft); margin-bottom:10px;}
+  .admin-actions{display:flex; gap:8px; flex-wrap:wrap;}
+  .admin-actions label{display:inline-flex; align-items:center; gap:6px; padding:8px 14px; border-radius:var(--radius-pill); background:var(--forest); color:var(--cream-soft); font-size:0.8rem; font-weight:600; cursor:pointer; transition:background 0.15s ease;}
+  .admin-actions label:hover{background:var(--forest-dark);}
+  .admin-actions label.uploading{background:var(--sage); pointer-events:none;}
+  .admin-actions label.disabled{opacity:0.4; pointer-events:none;}
+  .admin-actions label svg{width:14px; height:14px;}
+  .admin-actions input[type="file"]{display:none;}
+  .admin-clear{padding:8px 14px; border-radius:var(--radius-pill); border:1px solid var(--line); color:var(--ink-soft); font-size:0.8rem; font-weight:600;}
+  .admin-clear:hover{border-color:#B4472F; color:#B4472F; background:var(--clay-light);}
+  .admin-clear:disabled{opacity:0.4; pointer-events:none;}
+
+  .admin-error{font-size:0.76rem; color:#B4472F; margin-top:6px;}
+
+  .admin-toast{position:fixed; bottom:26px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--forest); color:var(--cream-soft); padding:12px 22px; border-radius:var(--radius-pill); font-size:0.86rem; font-weight:500; display:flex; align-items:center; gap:10px; box-shadow:var(--shadow); opacity:0; pointer-events:none; transition:all 0.25s ease; z-index:110;}
+  .admin-toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+  .admin-toast.error{background:#8A2F22;}
+  .admin-toast svg{width:16px; height:16px; color:var(--clay);}
+
+  @media (max-width:720px){
+    .admin-shell{padding:24px 18px 60px;}
+    .admin-grid{grid-template-columns:1fr;}
+    .admin-thumb{width:64px; height:64px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="admin-shell">
+  <div class="admin-topbar">
+    <div class="admin-brand">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3C6 5 4 10 6 15c1.5 3.5 5 5 8 4-1-4 0-9 4-12 1-3-2-5-6-4Z"/><path d="M8 18c2-4 4-8 9-11"/></svg>
+      <div>
+        <strong>Herbal Haven</strong>
+        <span>OWNER TOOLS</span>
+      </div>
+    </div>
+    <button type="button" class="admin-back" id="viewStorefrontBtn">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="20" y1="12" x2="5" y2="12"/><polyline points="11 18 5 12 11 6"/></svg>
+      View storefront
+    </button>
+  </div>
+
+  <div class="admin-head">
+    <h1>Product photos</h1>
+    <p>Upload a photo for each product. Changes save to the server and appear on the storefront for every visitor.</p>
+  </div>
+
+  <div class="admin-fatal" id="fileWarning">
+    <strong>This page needs the server to work.</strong>
+    You opened this file directly from disk (<code>file://</code>). That's why there was no password prompt and why links point at local folders.
+    Start the server, then open <code>http://localhost:3000/admin/</code> instead.
+    <pre>cd path/to/project
+npm install
+ADMIN_USER=owner ADMIN_PASS="pick-a-strong-password" npm start</pre>
+  </div>
+
+  <div class="admin-note">
+    <strong>Live storage:</strong> photos are saved to the server's <code>uploads/</code> folder and the mapping to <code>data/photos.json</code>. Supported formats: JPG, PNG, WebP, GIF, AVIF. Max 3 MB.
+  </div>
+
+  <div class="admin-actions-bar">
+    <button class="btn btn-ghost" id="refreshBtn" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15.5-6.4L21 8"/><polyline points="21 3 21 8 16 8"/><path d="M21 12a9 9 0 0 1-15.5 6.4L3 16"/><polyline points="3 21 3 16 8 16"/></svg>
+      Refresh from server
+    </button>
+  </div>
+
+  <div class="admin-grid" id="adminGrid"></div>
+</div>
+
+<div class="admin-toast" id="adminToast">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.5 2.5L16 9"/></svg>
+  <span id="adminToastText"></span>
+</div>
+
+<script>
+/* Detect file:// before anything else and warn clearly. */
+const IS_FILE_PROTOCOL = window.location.protocol === "file:";
+if(IS_FILE_PROTOCOL){
+  document.getElementById("fileWarning").classList.add("show");
+}
+
+/* "View storefront" always goes to the HTTP origin, never to a folder on disk. */
+document.getElementById("viewStorefrontBtn").addEventListener("click", () => {
+  if(IS_FILE_PROTOCOL){
+    showToast("Start the server, then open http://localhost:3000/admin/", true);
+    return;
+  }
+  window.location.href = window.location.origin + "/";
+});
+
+const ICONS = {
+  leafSprig: `<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M78 22c-24 2-40 18-40 40 0 8 2 14 5 18 18-4 32-18 35-40 1-6 1-12 0-18Z"/><path d="M45 78c8-14 16-26 32-38"/></svg>`,
+  bottle: `<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><rect x="32" y="40" width="36" height="44" rx="10"/><rect x="42" y="28" width="16" height="12" rx="2"/><path d="M50 28v-6M44 22h12"/><path d="M40 58h20M40 68h14" stroke-width="2.4"/><path d="M80 20c-6-5-13 1-9 9 8 1 13-4 9-9Z" stroke-width="2.4"/></svg>`,
+  powder: `<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 55a28 15 0 0 0 56 0"/><path d="M22 55h56"/><path d="M33 55c3-16 12-25 17-25s14 9 17 25"/><path d="M78 20c-6-5-13 1-9 9 8 1 13-4 9-9Z" stroke-width="2.4"/></svg>`,
+  tea: `<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 42h42v18a21 21 0 0 1-42 0Z"/><path d="M64 48c10-2 16 5 11 13-4 5-11 5-14 2"/><path d="M33 34c2-5-2-7 0-12M46 34c2-5-2-7 0-12" stroke-width="2.4"/><path d="M80 18c-6-5-13 1-9 9 8 1 13-4 9-9Z" stroke-width="2.4"/></svg>`,
+  nuts: `<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 52a32 16 0 0 0 64 0"/><path d="M18 52h64"/><circle cx="36" cy="45" r="5"/><circle cx="50" cy="40" r="5.5"/><circle cx="64" cy="45" r="5"/><circle cx="43" cy="50" r="4"/><path d="M78 18c-6-5-13 1-9 9 8 1 13-4 9-9Z" stroke-width="2.4"/></svg>`,
+  upload: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4"/><polyline points="6 10 12 4 18 10"/><path d="M4 20h16"/></svg>`
+};
+
+const CATEGORIES = [
+  {id:"oils",    label:"Oils",            icon:"bottle"},
+  {id:"powders", label:"Herbs & Powders", icon:"powder"},
+  {id:"teas",    label:"Teas",            icon:"tea"},
+  {id:"nuts",    label:"Seeds & Nuts",    icon:"nuts"}
+];
+
+const PRODUCTS = [
+  {id:1,  name:"Castor Oil",        cat:"oils",    size:"100ml", icon:"bottle"},
+  {id:2,  name:"Black Seed Oil",    cat:"oils",    size:"100ml", icon:"bottle"},
+  {id:3,  name:"Flax Seed Oil",     cat:"oils",    size:"100ml", icon:"bottle"},
+  {id:4,  name:"Coconut Oil",       cat:"oils",    size:"250ml", icon:"bottle"},
+  {id:5,  name:"Olive Oil",         cat:"oils",    size:"250ml", icon:"bottle"},
+  {id:6,  name:"Sweet Almond Oil",  cat:"oils",    size:"100ml", icon:"bottle"},
+  {id:7,  name:"Argan Oil",         cat:"oils",    size:"50ml",  icon:"bottle"},
+  {id:8,  name:"Moringa Powder",    cat:"powders", size:"100g",  icon:"powder"},
+  {id:9,  name:"Red Maca",          cat:"powders", size:"100g",  icon:"powder"},
+  {id:10, name:"Black Maca",        cat:"powders", size:"100g",  icon:"powder"},
+  {id:11, name:"Hibiscus Powder",   cat:"powders", size:"100g",  icon:"powder"},
+  {id:12, name:"Cloves",            cat:"powders", size:"100g",  icon:"leafSprig"},
+  {id:13, name:"Purple Tea",        cat:"teas",    size:"50g",   icon:"tea"},
+  {id:14, name:"Green Tea",         cat:"teas",    size:"50g",   icon:"tea"},
+  {id:15, name:"Hibiscus Flowers",  cat:"teas",    size:"50g",   icon:"tea"},
+  {id:16, name:"Sunflower Seeds",   cat:"nuts",    size:"200g",  icon:"nuts"},
+  {id:17, name:"Pumpkin Seeds",     cat:"nuts",    size:"200g",  icon:"nuts"},
+  {id:18, name:"Walnuts",           cat:"nuts",    size:"250g",  icon:"nuts"},
+  {id:19, name:"Almonds",           cat:"nuts",    size:"250g",  icon:"nuts"},
+  {id:20, name:"Cashew Nuts",       cat:"nuts",    size:"250g",  icon:"nuts"},
+  {id:21, name:"Granola",           cat:"nuts",    size:"400g",  icon:"nuts"}
+];
+
+const catLabel = id => (CATEGORIES.find(c => c.id === id) || {}).label || id;
+const catTint = id => ["powders","nuts"].includes(id) ? "var(--sage-light)" : "var(--clay-light)";
+
+let photos = {};
+const adminGrid = document.getElementById("adminGrid");
+
+function renderAdmin(){
+  adminGrid.innerHTML = PRODUCTS.map(p => {
+    const disabled = IS_FILE_PROTOCOL ? "disabled" : "";
+    return `
+    <div class="admin-card" data-card="${p.id}">
+      <div class="admin-thumb" style="background:${catTint(p.cat)}">
+        ${photos[p.id] ? `<img src="${photos[p.id]}" alt="${p.name}">` : ICONS[p.icon]}
+      </div>
+      <div class="admin-info">
+        <div class="admin-name">${p.name}</div>
+        <div class="admin-meta">${catLabel(p.cat)} · ${p.size}</div>
+        <div class="admin-actions">
+          <label class="${IS_FILE_PROTOCOL ? 'disabled' : ''}">
+            ${ICONS.upload}
+            ${photos[p.id] ? "Replace photo" : "Upload photo"}
+            <input type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/avif" data-upload="${p.id}" ${disabled}>
+          </label>
+          ${photos[p.id] ? `<button class="admin-clear" data-clear="${p.id}" ${disabled}>Remove</button>` : ""}
+        </div>
+        <div class="admin-error" data-error="${p.id}"></div>
+      </div>
+    </div>
+  `;}).join("");
+
+  if(IS_FILE_PROTOCOL) return; // no wiring when opened from disk
+
+  adminGrid.querySelectorAll("input[data-upload]").forEach(input => {
+    input.addEventListener("change", async e => {
+      const file = e.target.files && e.target.files[0];
+      if(!file) return;
+      const id = Number(input.dataset.upload);
+      const label = input.closest("label");
+      const errEl = adminGrid.querySelector(`[data-error="${id}"]`);
+      errEl.textContent = "";
+
+      if(!file.type.startsWith("image/")){
+        errEl.textContent = "That file isn't an image.";
+        return;
+      }
+      if(file.size > 3 * 1024 * 1024){
+        errEl.textContent = "Image is over 3 MB.";
+        return;
+      }
+
+      const fd = new FormData();
+      fd.append("photo", file);
+      label.classList.add("uploading");
+      const originalLabel = label.innerHTML;
+      label.innerHTML = "Uploading…";
+
+      try {
+        const res = await fetch(`/api/upload/${id}`, {
+          method: "POST",
+          body: fd,
+          credentials: "same-origin"
+        });
+        if(!res.ok){
+          const data = await res.json().catch(()=>({error:`Upload failed (${res.status})`}));
+          throw new Error(data.error || `Upload failed (${res.status})`);
+        }
+        const data = await res.json();
+        photos[id] = data.url;
+        showToast("Photo saved on server");
+        renderAdmin();
+      } catch(err){
+        label.classList.remove("uploading");
+        label.innerHTML = originalLabel;
+        errEl.textContent = err.message || "Upload failed";
+        showToast(err.message || "Upload failed", true);
+      }
+    });
+  });
+
+  adminGrid.querySelectorAll("[data-clear]").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      const id = Number(btn.dataset.clear);
+      if(!confirm("Remove this product photo from the server?")) return;
+      const errEl = adminGrid.querySelector(`[data-error="${id}"]`);
+      errEl.textContent = "";
+      try {
+        const res = await fetch(`/api/upload/${id}`, {
+          method: "DELETE",
+          credentials: "same-origin"
+        });
+        if(!res.ok && res.status !== 404){
+          const data = await res.json().catch(()=>({error:`Delete failed (${res.status})`}));
+          throw new Error(data.error || `Delete failed (${res.status})`);
+        }
+        delete photos[id];
+        showToast("Photo removed");
+        renderAdmin();
+      } catch(err){
+        errEl.textContent = err.message || "Delete failed";
+        showToast(err.message || "Delete failed", true);
+      }
+    });
+  });
+}
+
+async function loadFromServer(){
+  if(IS_FILE_PROTOCOL){
+    renderAdmin();
+    return;
+  }
+  try {
+    const res = await fetch("/api/photos", { cache: "no-store" });
+    if(!res.ok){
+      throw new Error(`Server returned ${res.status}`);
+    }
+    const data = await res.json();
+    photos = data && typeof data === "object" ? data : {};
+  } catch(e){
+    showToast("Couldn't reach server — is it running?", true);
+  }
+  renderAdmin();
+}
+
+document.getElementById("refreshBtn").addEventListener("click", () => loadFromServer());
+
+let toastTimer;
+function showToast(text, isError){
+  const t = document.getElementById("adminToast");
+  document.getElementById("adminToastText").textContent = text;
+  t.classList.toggle("error", !!isError);
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=> t.classList.remove("show"), 2400);
+}
+
+loadFromServer();
+</script>
+</body>
+</html>

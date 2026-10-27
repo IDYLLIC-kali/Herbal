@@ -1,0 +1,18 @@
+async function rebuildPhotosFromCloudinary(){
+  try {
+    const result = await cloudinary.api.resources({
+      type: "upload",
+      prefix: "herbal-haven/product-",
+      max_results: 500
+    });
+    const photos = {};
+    for(const r of result.resources){
+      const m = r.public_id.match(/product-(\d+)$/);
+      if(m) photos[Number(m[1])] = r.secure_url;
+    }
+    writePhotos(photos);
+    console.log(`Rebuilt photos.json from Cloudinary: ${Object.keys(photos).length} entries`);
+  } catch(e){
+    console.warn("Could not rebuild photos.json from Cloudinary:", e.message);
+  }
+}

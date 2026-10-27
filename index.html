@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Herbal Haven — Nature's Goodness. Yours.</title>
+<meta name="description" content="Natural oils, herbs & powders, teas, seeds and nuts.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500;1,9..144,600&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#F6F1E6; --cream-soft:#FBF8F2; --paper:#FFFFFF;
+    --forest:#25391F; --forest-dark:#182611;
+    --sage:#7F9271; --sage-light:#E7ECDC;
+    --clay:#B98A4E; --clay-light:#F1E4CC;
+    --ink:#2B2A22; --ink-soft:#6B6A5C; --line:#E3D9C2;
+    --shadow:0 14px 34px rgba(30,45,22,0.10);
+    --radius-card:16px; --radius-pill:999px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
+  }
+  body{margin:0; background:var(--cream); color:var(--ink); font-family:'Work Sans', sans-serif; -webkit-font-smoothing:antialiased;}
+  h1,h2,h3,h4{font-family:'Fraunces',serif; color:var(--forest); margin:0; line-height:1.1; font-weight:500;}
+  p{margin:0; color:var(--ink-soft); line-height:1.6;}
+  a{color:inherit; text-decoration:none;}
+  img,svg{display:block; max-width:100%;}
+  button{font-family:inherit; cursor:pointer; border:none; background:none; color:inherit;}
+  input{font-family:inherit;}
+  ul{list-style:none; margin:0; padding:0;}
+  .wrap{max-width:1240px; margin:0 auto; padding:0 32px;}
+  section{padding:88px 0;}
+  .icon{width:20px; height:20px; flex-shrink:0;}
+  :focus-visible{outline:2px solid var(--forest); outline-offset:3px;}
+
+  .btn{display:inline-flex; align-items:center; gap:8px; padding:14px 26px; border-radius:var(--radius-pill); font-weight:600; font-size:0.95rem; white-space:nowrap; transition:transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn-primary{background:var(--forest); color:var(--cream-soft);}
+  .btn-primary:hover{background:var(--forest-dark); box-shadow:var(--shadow);}
+  .btn-outline{border:1.5px solid var(--forest); color:var(--forest);}
+  .btn-outline:hover{background:var(--forest); color:var(--cream-soft);}
+  .btn-block{width:100%; justify-content:center;}
+  .btn[disabled]{opacity:0.45; cursor:not-allowed; transform:none;}
+
+  header{position:sticky; top:0; z-index:60; background:rgba(246,241,230,0.92); backdrop-filter:blur(10px); border-bottom:1px solid var(--line);}
+  .header-inner{display:flex; align-items:center; justify-content:space-between; padding:16px 32px; max-width:1240px; margin:0 auto; gap:24px;}
+  .logo{display:flex; align-items:center; gap:10px;}
+  .logo-mark{width:34px; height:34px; color:var(--forest);}
+  .logo-text{display:flex; flex-direction:column; line-height:1.05;}
+  .logo-text strong{font-family:'Fraunces',serif; font-size:1.3rem; color:var(--forest); font-weight:600; font-style:italic;}
+  .logo-text span{font-size:0.58rem; letter-spacing:0.14em; color:var(--ink-soft); font-weight:600;}
+  nav.main-nav{display:flex; gap:30px;}
+  nav.main-nav a{font-size:0.94rem; font-weight:500; color:var(--forest); position:relative; padding:4px 0;}
+  nav.main-nav a.active::after, nav.main-nav a:hover::after{content:""; position:absolute; left:0; right:0; bottom:-3px; height:2px; background:var(--clay);}
+  .header-actions{display:flex; align-items:center; gap:6px;}
+  .icon-btn{width:40px; height:40px; display:flex; align-items:center; justify-content:center; border-radius:50%; color:var(--forest); position:relative; transition:background 0.15s ease;}
+  .icon-btn:hover{background:var(--sage-light);}
+  .cart-count{position:absolute; top:0; right:0; background:var(--clay); color:#fff; font-size:0.62rem; font-weight:700; min-width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center; padding:0 3px;}
+  .search-box{display:flex; align-items:center; overflow:hidden; width:0; opacity:0; transition:width 0.28s ease, opacity 0.2s ease; background:var(--sage-light); border-radius:var(--radius-pill);}
+  .search-box.open{width:220px; opacity:1; margin-right:4px;}
+  .search-box input{width:100%; border:none; background:none; padding:9px 14px; font-size:0.88rem; color:var(--ink); outline:none;}
+  .menu-toggle{display:none;}
+
+  .mobile-nav{position:fixed; inset:0; background:rgba(20,30,16,0.4); z-index:80; opacity:0; pointer-events:none; transition:opacity 0.2s ease;}
+  .mobile-nav.open{opacity:1; pointer-events:auto;}
+  .mobile-nav-panel{position:absolute; top:0; right:0; height:100%; width:min(320px,84vw); background:var(--cream-soft); padding:26px; transform:translateX(100%); transition:transform 0.28s ease; display:flex; flex-direction:column; gap:6px;}
+  .mobile-nav.open .mobile-nav-panel{transform:translateX(0);}
+  .mobile-nav-panel a{padding:13px 6px; font-size:1.05rem; font-weight:500; color:var(--forest); border-bottom:1px solid var(--line);}
+  .mobile-nav-close{align-self:flex-end; width:36px; height:36px; color:var(--forest);}
+
+  .hero{padding:56px 0 40px;}
+  .hero-inner{display:grid; grid-template-columns:1.05fr 0.95fr; gap:56px; align-items:center;}
+  .eyebrow{font-size:0.78rem; font-weight:600; letter-spacing:0.06em; color:var(--sage); display:flex; gap:10px; flex-wrap:wrap; margin-bottom:18px;}
+  .eyebrow span:not(:last-child)::after{content:"•"; margin-left:10px; color:var(--clay);}
+  .hero h1{font-size:clamp(2.3rem, 4.2vw, 3.5rem); font-weight:500;}
+  .hero h1 em{font-style:italic; color:var(--clay); font-weight:500;}
+  .hero p.lead{margin-top:20px; font-size:1.08rem; max-width:440px;}
+  .hero-actions{display:flex; gap:14px; margin-top:32px; flex-wrap:wrap;}
+  .hero-anim > *{animation:fadeUp 0.7s ease both;}
+  .hero-anim > *:nth-child(1){animation-delay:0.02s;}
+  .hero-anim > *:nth-child(2){animation-delay:0.12s;}
+  .hero-anim > *:nth-child(3){animation-delay:0.22s;}
+  .hero-anim > *:nth-child(4){animation-delay:0.32s;}
+  @keyframes fadeUp{from{opacity:0; transform:translateY(16px);} to{opacity:1; transform:translateY(0);}}
+
+  .hero-art{position:relative; aspect-ratio:1/0.86; animation:artIn 0.8s ease 0.15s both;}
+  @keyframes artIn{from{opacity:0; transform:scale(0.94);} to{opacity:1; transform:scale(1);}}
+  .art-blob{position:absolute; border-radius:50%; background:var(--sage-light);}
+  .art-blob.b1{width:78%; height:78%; top:6%; left:8%;}
+  .art-blob.b2{width:40%; height:40%; bottom:2%; right:2%; background:var(--clay-light);}
+  .art-item{position:absolute; background:var(--paper); border-radius:24px; box-shadow:var(--shadow); display:flex; align-items:center; justify-content:center; padding:14%;}
+  .art-item svg{width:100%; height:100%; color:var(--forest);}
+  .art-item.i1{width:34%; aspect-ratio:1; top:6%; left:30%;}
+  .art-item.i2{width:30%; aspect-ratio:1; top:44%; left:2%;}
+  .art-item.i3{width:32%; aspect-ratio:1; bottom:6%; left:32%;}
+  .art-item.i4{width:28%; aspect-ratio:1; top:16%; right:0%;}
+  .art-badge{position:absolute; top:-2%; right:10%; width:24%; aspect-ratio:1; border-radius:50%; background:var(--forest); color:var(--cream-soft); display:flex; align-items:center; justify-content:center; text-align:center; font-family:'Fraunces',serif; font-style:italic; font-size:0.72rem; line-height:1.25; box-shadow:var(--shadow); padding:8%;}
+
+  .cat-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:22px; margin-top:48px;}
+  .cat-card{text-align:center; padding:26px 14px; border-radius:var(--radius-card); transition:background 0.2s ease, transform 0.2s ease; cursor:pointer;}
+  .cat-card:hover{background:var(--cream-soft); transform:translateY(-4px);}
+  .cat-circle{width:92px; height:92px; border-radius:50%; margin:0 auto 16px; display:flex; align-items:center; justify-content:center; padding:22px;}
+  .cat-circle svg{color:var(--forest); width:100%; height:100%;}
+  .cat-card h3{font-size:1.05rem; margin-bottom:6px; font-weight:600;}
+  .cat-card p{font-size:0.85rem; margin-bottom:10px;}
+  .cat-link{font-size:0.82rem; font-weight:600; color:var(--forest); display:inline-flex; align-items:center; gap:4px;}
+  .cat-link svg{width:14px; height:14px;}
+
+  .section-head{display:flex; align-items:flex-end; justify-content:space-between; gap:20px; flex-wrap:wrap;}
+  .section-head h2{font-size:clamp(1.7rem,2.6vw,2.3rem); font-weight:500;}
+  .section-head .view-all{font-weight:600; font-size:0.92rem; display:inline-flex; align-items:center; gap:6px; color:var(--forest);}
+  .section-head .view-all svg{width:15px; height:15px;}
+
+  .filter-row{display:flex; gap:10px; flex-wrap:wrap; margin:36px 0 34px;}
+  .filter-chip{padding:9px 18px; border-radius:var(--radius-pill); border:1.5px solid var(--line); font-size:0.86rem; font-weight:500; color:var(--forest); transition:all 0.15s ease;}
+  .filter-chip:hover{border-color:var(--forest);}
+  .filter-chip.active{background:var(--forest); border-color:var(--forest); color:var(--cream-soft);}
+  .empty-state{padding:60px 20px; text-align:center; color:var(--ink-soft);}
+
+  .product-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:24px;}
+  .product-card{background:var(--paper); border-radius:var(--radius-card); overflow:hidden; border:1px solid var(--line); display:flex; flex-direction:column; transition:transform 0.2s ease, box-shadow 0.2s ease;}
+  .product-card:hover{transform:translateY(-5px); box-shadow:var(--shadow);}
+  .product-photo{aspect-ratio:1/0.9; display:flex; align-items:center; justify-content:center; padding:16%; position:relative; overflow:hidden;}
+  .product-photo svg{width:100%; height:100%; color:var(--forest);}
+  .product-photo img{width:100%; height:100%; object-fit:cover; position:absolute; inset:0;}
+  .product-body{padding:18px 18px 20px; display:flex; flex-direction:column; gap:10px; flex:1;}
+  .product-name{font-size:1rem; font-weight:600; color:var(--forest); font-family:'Fraunces',serif;}
+  .product-size{font-size:0.8rem; color:var(--ink-soft); margin-top:-4px;}
+  .product-price{font-weight:700; color:var(--ink); font-size:1.05rem;}
+  .add-btn{margin-top:auto; background:var(--forest); color:var(--cream-soft); padding:11px 16px; border-radius:10px; font-weight:600; font-size:0.9rem; display:flex; align-items:center; justify-content:center; gap:8px; transition:background 0.18s ease, transform 0.15s ease;}
+  .add-btn:hover{background:var(--forest-dark);}
+  .add-btn.added{background:var(--sage);}
+
+  .why{background:var(--sage-light);}
+  .why-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:36px; margin-top:50px;}
+  .why-item{text-align:center;}
+  .why-icon{width:62px; height:62px; border-radius:50%; background:var(--paper); margin:0 auto 18px; display:flex; align-items:center; justify-content:center; padding:16px; color:var(--forest);}
+  .why-item h3{font-size:1.05rem; margin-bottom:8px; font-weight:600;}
+  .why-item p{font-size:0.88rem;}
+
+  .how-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:0; margin-top:56px; position:relative;}
+  .how-item{text-align:center; padding:0 18px; position:relative;}
+  .how-item::before{content:""; position:absolute; top:24px; left:-50%; width:100%; height:1.5px; background:repeating-linear-gradient(to right, var(--sage) 0 8px, transparent 8px 14px); z-index:0;}
+  .how-item:first-child::before{display:none;}
+  .how-num{width:48px; height:48px; border-radius:50%; background:var(--forest); color:var(--cream-soft); display:flex; align-items:center; justify-content:center; font-family:'Fraunces',serif; font-weight:600; margin:0 auto 18px; position:relative; z-index:1; font-size:1.05rem;}
+  .how-item h3{font-size:1.02rem; margin-bottom:8px; font-weight:600;}
+  .how-item p{font-size:0.86rem;}
+
+  .about-inner{display:grid; grid-template-columns:0.9fr 1.1fr; gap:64px; align-items:center;}
+  .about-art{position:relative; aspect-ratio:1/0.92;}
+  .about-art .art-blob{background:var(--clay-light);}
+  .about-art .art-blob.b2{background:var(--sage-light);}
+  .about-text .eyebrow{margin-bottom:14px;}
+  .about-text h2{font-size:clamp(1.7rem,2.6vw,2.3rem); margin-bottom:18px; font-weight:500;}
+  .about-text p{max-width:480px; margin-bottom:26px;}
+
+  .cta-band{background:var(--forest); color:var(--cream-soft); border-radius:28px; padding:52px 48px; display:flex; align-items:center; justify-content:space-between; gap:24px; flex-wrap:wrap;}
+  .cta-band h2{color:var(--cream-soft); font-size:clamp(1.5rem,2.4vw,2rem); font-weight:500;}
+  .cta-band h2 em{color:var(--clay); font-style:italic;}
+  .cta-band p{color:#CFE0C6; margin-top:8px;}
+  .cta-band .btn-primary{background:var(--cream-soft); color:var(--forest);}
+  .cta-band .btn-primary:hover{background:#fff;}
+
+  footer{padding-top:64px; padding-bottom:28px; border-top:1px solid var(--line);}
+  .footer-top{display:flex; justify-content:space-between; gap:30px; flex-wrap:wrap; padding-bottom:40px;}
+  .footer-nav{display:flex; gap:30px; flex-wrap:wrap;}
+  .footer-nav a{font-size:0.92rem; font-weight:500; color:var(--forest);}
+  .footer-social{display:flex; gap:12px;}
+  .footer-social a{width:38px; height:38px; border-radius:50%; border:1px solid var(--line); color:var(--forest); display:flex; align-items:center; justify-content:center; transition:background 0.15s ease, color 0.15s ease;}
+  .footer-social a:hover{background:var(--forest); color:var(--cream-soft);}
+  .footer-social svg{width:16px; height:16px;}
+  .footer-bottom{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; padding-top:24px; border-top:1px solid var(--line); font-size:0.82rem; color:var(--ink-soft);}
+  .tagline-dots span:not(:last-child)::after{content:"•"; margin:0 8px; color:var(--clay);}
+
+  .overlay{position:fixed; inset:0; background:rgba(20,30,16,0.42); z-index:90; opacity:0; pointer-events:none; transition:opacity 0.25s ease;}
+  .overlay.open{opacity:1; pointer-events:auto;}
+  .cart-drawer{position:fixed; top:0; right:0; height:100%; width:min(420px,92vw); background:var(--cream-soft); z-index:95; transform:translateX(100%); transition:transform 0.3s ease; display:flex; flex-direction:column;}
+  .overlay.open .cart-drawer{transform:translateX(0);}
+  .cart-head{display:flex; align-items:center; justify-content:space-between; padding:22px 24px; border-bottom:1px solid var(--line);}
+  .cart-head h3{font-size:1.2rem; display:flex; align-items:center; gap:10px;}
+  .cart-close{width:36px; height:36px; color:var(--forest);}
+  .cart-items{flex:1; overflow-y:auto; padding:14px 24px;}
+  .cart-item{display:flex; gap:14px; padding:16px 0; border-bottom:1px solid var(--line);}
+  .cart-thumb{width:64px; height:64px; border-radius:12px; background:var(--sage-light); flex-shrink:0; display:flex; align-items:center; justify-content:center; padding:12px; color:var(--forest); overflow:hidden; position:relative;}
+  .cart-thumb svg{width:100%; height:100%;}
+  .cart-thumb img{width:100%; height:100%; object-fit:cover; position:absolute; inset:0;}
+  .cart-item-info{flex:1; display:flex; flex-direction:column; gap:4px;}
+  .cart-item-top{display:flex; justify-content:space-between; gap:8px;}
+  .cart-item-name{font-weight:600; font-size:0.92rem; color:var(--forest);}
+  .cart-item-size{font-size:0.78rem; color:var(--ink-soft);}
+  .cart-item-bottom{display:flex; align-items:center; justify-content:space-between; margin-top:6px;}
+  .qty-control{display:flex; align-items:center; gap:0; border:1px solid var(--line); border-radius:var(--radius-pill); overflow:hidden;}
+  .qty-control button{width:26px; height:26px; display:flex; align-items:center; justify-content:center; color:var(--forest);}
+  .qty-control button:hover{background:var(--sage-light);}
+  .qty-control span{min-width:22px; text-align:center; font-size:0.85rem; font-weight:600;}
+  .qty-control svg{width:12px; height:12px;}
+  .remove-btn{color:var(--ink-soft); width:28px; height:28px; display:flex; align-items:center; justify-content:center; border-radius:50%;}
+  .remove-btn:hover{color:#B4472F; background:var(--clay-light);}
+  .remove-btn svg{width:15px; height:15px;}
+  .line-total{font-weight:700; font-size:0.9rem;}
+  .cart-empty{padding:60px 10px; text-align:center; color:var(--ink-soft);}
+  .cart-empty svg{width:52px; height:52px; margin:0 auto 16px; color:var(--sage);}
+  .cart-foot{padding:20px 24px 26px; border-top:1px solid var(--line);}
+  .cart-subtotal{display:flex; justify-content:space-between; font-weight:700; font-size:1.05rem; margin-bottom:16px; color:var(--forest);}
+  .cart-note{font-size:0.78rem; margin-bottom:14px;}
+  .order-success{padding:40px 10px; text-align:center;}
+  .order-success svg{width:56px; height:56px; color:var(--forest); margin:0 auto 18px;}
+  .order-success h4{font-size:1.15rem; margin-bottom:8px;}
+  .order-success p{margin-bottom:22px; font-size:0.9rem;}
+
+  .toast{position:fixed; bottom:26px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--forest); color:var(--cream-soft); padding:13px 22px; border-radius:var(--radius-pill); font-size:0.88rem; font-weight:500; display:flex; align-items:center; gap:10px; box-shadow:var(--shadow); z-index:110; opacity:0; pointer-events:none; transition:all 0.28s ease;}
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+  .toast svg{width:17px; height:17px; color:var(--clay);}
+
+  .modal-overlay{position:fixed; inset:0; background:rgba(20,30,16,0.5); z-index:100; display:flex; align-items:center; justify-content:center; padding:24px; opacity:0; pointer-events:none; transition:opacity 0.25s ease;}
+  .modal-overlay.open{opacity:1; pointer-events:auto;}
+  .modal-box{background:var(--cream-soft); border-radius:20px; max-width:520px; width:100%; padding:38px; transform:scale(0.95); transition:transform 0.25s ease; max-height:82vh; overflow-y:auto;}
+  .modal-overlay.open .modal-box{transform:scale(1);}
+  .modal-box h3{font-size:1.4rem; margin-bottom:16px;}
+  .modal-box p{margin-bottom:14px;}
+  .modal-close-row{display:flex; justify-content:flex-end; margin-top:18px;}
+
+  @media (max-width:980px){
+    nav.main-nav{display:none;}
+    .menu-toggle{display:flex; width:40px; height:40px; align-items:center; justify-content:center; color:var(--forest);}
+    .hero-inner{grid-template-columns:1fr; gap:44px;}
+    .hero-art{max-width:420px; margin:0 auto;}
+    .about-inner{grid-template-columns:1fr;}
+    .about-art{max-width:420px; margin:0 auto; order:-1;}
+    .cat-grid{grid-template-columns:repeat(2,1fr);}
+    .product-grid{grid-template-columns:repeat(2,1fr);}
+    .why-grid{grid-template-columns:repeat(2,1fr); row-gap:44px;}
+    .how-grid{grid-template-columns:repeat(2,1fr); row-gap:44px;}
+    .how-item:nth-child(3)::before{display:none;}
+    section{padding:64px 0;}
+  }
+  @media (max-width:640px){
+    .wrap{padding:0 20px;}
+    .header-inner{padding:14px 20px;}
+    .search-box.open{width:150px;}
+    .cat-grid{grid-template-columns:repeat(2,1fr);}
+    .product-grid{grid-template-columns:1fr 1fr; gap:14px;}
+    .product-body{padding:14px;}
+    .why-grid{grid-template-columns:1fr;}
+    .how-grid{grid-template-columns:1fr; row-gap:36px;}
+    .how-item::before{display:none;}
+    .cta-band{padding:38px 26px; flex-direction:column; text-align:center;}
+    .footer-top{flex-direction:column; gap:24px;}
+    section{padding:52px 0;}
+    .hero h1{font-size:2.1rem;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="#home" class="logo" aria-label="Herbal Haven home">
+      <svg class="logo-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3C6 5 4 10 6 15c1.5 3.5 5 5 8 4-1-4 0-9 4-12 1-3-2-5-6-4Z"/><path d="M8 18c2-4 4-8 9-11"/></svg>
+      <span class="logo-text"><strong>Herbal Haven</strong><span>NATURE'S GOODNESS. YOURS.</span></span>
+    </a>
+    <nav class="main-nav" id="mainNav">
+      <a href="#home" class="active" data-nav>Home</a>
+      <a href="#shop" data-nav data-cat="all">Shop</a>
+      <a href="#shop" data-nav data-cat="oils">Oils</a>
+      <a href="#shop" data-nav data-cat="powders">Herbs &amp; Powders</a>
+      <a href="#shop" data-nav data-cat="teas">Teas</a>
+      <a href="#shop" data-nav data-cat="nuts">Seeds &amp; Nuts</a>
+      <a href="#about" data-nav>About Us</a>
+      <a href="#contact" data-nav>Contact</a>
+    </nav>
+    <div class="header-actions">
+      <div class="search-box" id="searchBox">
+        <input type="text" id="searchInput" placeholder="Find an oil, tea, powder…" aria-label="Search products">
+      </div>
+      <button class="icon-btn" id="searchToggle" aria-label="Search">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><line x1="15.5" y1="15.5" x2="21" y2="21"/></svg>
+      </button>
+      <button class="icon-btn" id="cartToggle" aria-label="Open cart">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h2l2.4 12.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.6L21 8H6.5"/><circle cx="10" cy="21" r="1.3" fill="currentColor" stroke="none"/><circle cx="18" cy="21" r="1.3" fill="currentColor" stroke="none"/></svg>
+        <span class="cart-count" id="cartCount" style="display:none;">0</span>
+      </button>
+      <button class="menu-toggle" id="menuToggle" aria-label="Open menu">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-nav" id="mobileNav">
+  <div class="mobile-nav-panel">
+    <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
+    </button>
+    <a href="#home" data-nav data-close>Home</a>
+    <a href="#shop" data-nav data-cat="all" data-close>Shop</a>
+    <a href="#shop" data-nav data-cat="oils" data-close>Oils</a>
+    <a href="#shop" data-nav data-cat="powders" data-close>Herbs &amp; Powders</a>
+    <a href="#shop" data-nav data-cat="teas" data-close>Teas</a>
+    <a href="#shop" data-nav data-cat="nuts" data-close>Seeds &amp; Nuts</a>
+    <a href="#about" data-nav data-close>About Us</a>
+    <a href="#contact" data-nav data-close>Contact</a>
+  </div>
+</div>
+
+<section class="hero" id="home">
+  <div class="wrap hero-inner">
+    <div class="hero-anim">
+      <p class="eyebrow"><span>Oils</span><span>Herbs &amp; Powders</span><span>Teas</span><span>Seeds &amp; Nuts</span></p>
+      <h1>Nourish Naturally.<br><em>Glow Confidently.</em></h1>
+      <p class="lead">Cold-pressed oils, dried herbs, loose teas and whole seeds — chosen for what they do, not how they look on a shelf.</p>
+      <div class="hero-actions">
+        <button class="btn btn-primary" data-scroll-shop="all">Shop all
+          <svg class="icon" style="width:16px;height:16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg>
+        </button>
+        <button class="btn btn-outline" data-scroll="#categories">Browse categories</button>
+      </div>
+    </div>
+    <div class="hero-art" aria-hidden="true">
+      <div class="art-blob b1"></div>
+      <div class="art-blob b2"></div>
+      <div class="art-item i1" id="artPowder"></div>
+      <div class="art-item i2" id="artJar"></div>
+      <div class="art-item i3" id="artTea"></div>
+      <div class="art-item i4" id="artNuts"></div>
+      <div class="art-badge">Small-batch &amp; single-ingredient</div>
+    </div>
+  </div>
+</section>
+
+<section id="categories">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Shop by Category</h2>
+    </div>
+    <div class="cat-grid" id="catGrid"></div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Featured</h2>
+      <button class="view-all" data-scroll-shop="all">See the full range
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg>
+      </button>
+    </div>
+    <div class="product-grid" id="featuredGrid" style="margin-top:40px;"></div>
+  </div>
+</section>
+
+<section id="shop">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 id="shopHeading">All Products</h2>
+      <p style="font-size:0.88rem;" id="shopCount"></p>
+    </div>
+    <div class="filter-row" id="filterRow"></div>
+    <div class="product-grid" id="shopGrid"></div>
+    <div class="empty-state" id="emptyState" style="display:none;">
+      <p>Nothing matches that search. Try a shorter term or a different category.</p>
+    </div>
+  </div>
+</section>
+
+<section class="why">
+  <div class="wrap">
+    <h2 style="text-align:center; font-size:clamp(1.6rem,2.4vw,2.1rem);">Why Choose Us?</h2>
+    <div class="why-grid">
+      <div class="why-item">
+        <div class="why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:100%;height:100%;"><path d="M12 3C6 5 4 10 6 15c1.5 3.5 5 5 8 4-1-4 0-9 4-12 1-3-2-5-6-4Z"/><path d="M8 18c2-4 4-8 9-11"/></svg></div>
+        <h3>Single-ingredient</h3>
+        <p>No blends, no fillers — each jar holds one thing.</p>
+      </div>
+      <div class="why-item">
+        <div class="why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="width:100%;height:100%;"><path d="M12 3l7 3v5c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V6l7-3Z"/><path d="M9 12l2 2 4-4"/></svg></div>
+        <h3>Small batches</h3>
+        <p>We buy in small quantities so what you get is fresh.</p>
+      </div>
+      <div class="why-item">
+        <div class="why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="width:100%;height:100%;"><rect x="2" y="7" width="11" height="9"/><path d="M13 10h4l3 3v3h-7z"/><circle cx="6" cy="18" r="1.6"/><circle cx="17" cy="18" r="1.6"/></svg></div>
+        <h3>Nairobi delivery</h3>
+        <p>Same-week drop-off around Nairobi, courier elsewhere.</p>
+      </div>
+      <div class="why-item">
+        <div class="why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="width:100%;height:100%;"><path d="M12 20s-7-4.6-9.5-9C.8 7.8 2 4.5 5.2 3.6 7.6 3 10 4 12 6.5 14 4 16.4 3 18.8 3.6 22 4.5 23.2 7.8 21.5 11 19 15.4 12 20 12 20Z"/></svg></div>
+        <h3>Real answers</h3>
+        <p>Ask us what a product is for — we'll tell you plainly.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 style="text-align:center; font-size:clamp(1.6rem,2.4vw,2.1rem);">How It Works</h2>
+    <div class="how-grid">
+      <div class="how-item"><div class="how-num">1</div><h3>Browse</h3><p>Look through the four categories.</p></div>
+      <div class="how-item"><div class="how-num">2</div><h3>Add to Cart</h3><p>Pick what you need and set the quantity.</p></div>
+      <div class="how-item"><div class="how-num">3</div><h3>Checkout</h3><p>Pay by M-Pesa or card.</p></div>
+      <div class="how-item"><div class="how-num">4</div><h3>Delivery</h3><p>We drop it off or courier it to you.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="wrap about-inner">
+    <div class="about-art" aria-hidden="true">
+      <div class="art-blob b1"></div>
+      <div class="art-blob b2"></div>
+      <div class="art-item i1" id="artTea2"></div>
+      <div class="art-item i2" id="artNuts2"></div>
+      <div class="art-item i3" id="artBottle2"></div>
+    </div>
+    <div class="about-text">
+      <p class="eyebrow"><span>About Us</span></p>
+      <h2>Rooted in nature, made for everyday life</h2>
+      <p>Herbal Haven is a small Nairobi shop selling single-ingredient oils, herbs, teas, seeds and nuts. We started it because the alternatives on the shelf were either over-blended or over-priced. Everything here is one ingredient, bought in small quantities, and packed when you order.</p>
+      <button class="btn btn-primary" id="learnMoreBtn">Read the full story
+        <svg class="icon" style="width:16px;height:16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg>
+      </button>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="cta-band">
+      <div>
+        <h2>Ready to embrace <em>natural living</em>?</h2>
+        <p>Start with one jar. See how it fits your week.</p>
+      </div>
+      <button class="btn btn-primary" data-scroll-shop="all">Shop all
+        <svg class="icon" style="width:16px;height:16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg>
+      </button>
+    </div>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="wrap">
+    <div class="footer-top">
+      <a href="#home" class="logo">
+        <svg class="logo-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3C6 5 4 10 6 15c1.5 3.5 5 5 8 4-1-4 0-9 4-12 1-3-2-5-6-4Z"/><path d="M8 18c2-4 4-8 9-11"/></svg>
+        <span class="logo-text"><strong>Herbal Haven</strong><span>NATURE'S GOODNESS. YOURS.</span></span>
+      </a>
+      <nav class="footer-nav">
+        <a href="#home" data-nav>Home</a>
+        <a href="#shop" data-nav data-cat="all">Shop</a>
+        <a href="#about" data-nav>About Us</a>
+        <a href="#contact" data-nav>Contact</a>
+      </nav>
+      <div class="footer-social">
+        <a href="#" title="Instagram" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none"/></svg></a>
+        <a href="#" title="Facebook" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M15 8h-2c-1 0-2 .6-2 2v2H9v3h2v6h3v-6h2.2l.8-3H14v-1.6c0-.6.3-1 .9-1H16V8Z"/></svg></a>
+        <a href="#" title="TikTok" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4v9.5a3.2 3.2 0 1 1-3-3.2"/><path d="M14 4c.4 2.2 2 3.8 4 4"/></svg></a>
+        <a href="#" title="WhatsApp" aria-label="WhatsApp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 18l-1.2 3.3L8.3 20A8 8 0 1 0 5 17Z"/><path d="M9 9.5c0 3.5 3 6.5 6.5 6.5.6 0 1-.5.8-1l-.7-1.7c-.2-.4-.6-.5-1-.4l-1 .4c-1-.6-2-1.6-2.6-2.6l.4-1c.1-.4 0-.8-.4-1L9.9 8.2c-.5-.2-1 .2-1 .8Z"/></svg></a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span id="year"></span> Herbal Haven. All rights reserved.</span>
+      <span class="tagline-dots"><span>Nairobi</span><span>Single-ingredient</span><span>Small-batch</span></span>
+    </div>
+  </div>
+</footer>
+
+<div class="overlay" id="cartOverlay">
+  <div class="cart-drawer" role="dialog" aria-label="Shopping cart">
+    <div class="cart-head">
+      <h3>
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h2l2.4 12.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.6L21 8H6.5"/><circle cx="10" cy="21" r="1.3" fill="currentColor" stroke="none"/><circle cx="18" cy="21" r="1.3" fill="currentColor" stroke="none"/></svg>
+        Your Cart
+      </h3>
+      <button class="cart-close" id="cartClose" aria-label="Close cart">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
+      </button>
+    </div>
+    <div class="cart-items" id="cartItems"></div>
+    <div class="cart-foot" id="cartFoot"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.5 2.5L16 9"/></svg>
+  <span id="toastText"></span>
+</div>
+
+<div class="modal-overlay" id="aboutModal">
+  <div class="modal-box">
+    <h3>Our Story</h3>
+    <p>We started Herbal Haven because the oils and herbs we wanted for ourselves weren't on any shelf in Nairobi without being mixed with something else, or sold under a label that was vague about where it came from.</p>
+    <p>So we began with three oils and a few dried herbs, sold in plain jars to friends and neighbours. Everything was one ingredient. Everything was bought in small quantities. Everything was packed when someone asked for it.</p>
+    <p>That's still how we work. Four categories — oils, herbs &amp; powders, teas, seeds &amp; nuts — and one rule for each product: if we can't tell you exactly what's in the jar, we don't stock it.</p>
+    <div class="modal-close-row">
+      <button class="btn btn-primary" id="closeAboutModal">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const ICONS = {
+  leafSprig: `<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M78 22c-24 2-40 18-40 40 0 8 2 14 5 18 18-4 32-18 35-40 1-6 1-12 0-18Z"/><path d="M45 78c8-14 16-26 32-38"/></svg>`,
+  bottle: `<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><rect x="32" y="40" width="36" height="44" rx="10"/><rect x="42" y="28" width="16" height="12" rx="2"/><path d="M50 28v-6M44 22h12"/><path d="M40 58h20M40 68h14" stroke-width="2.4"/><path d="M80 20c-6-5-13 1-9 9 8 1 13-4 9-9Z" stroke-width="2.4"/></svg>`,
+  powder: `<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 55a28 15 0 0 0 56 0"/><path d="M22 55h56"/><path d="M33 55c3-16 12-25 17-25s14 9 17 25"/><path d="M78 20c-6-5-13 1-9 9 8 1 13-4 9-9Z" stroke-width="2.4"/></svg>`,
+  tea: `<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 42h42v18a21 21 0 0 1-42 0Z"/><path d="M64 48c10-2 16 5 11 13-4 5-11 5-14 2"/><path d="M33 34c2-5-2-7 0-12M46 34c2-5-2-7 0-12" stroke-width="2.4"/><path d="M80 18c-6-5-13 1-9 9 8 1 13-4 9-9Z" stroke-width="2.4"/></svg>`,
+  nuts: `<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 52a32 16 0 0 0 64 0"/><path d="M18 52h64"/><circle cx="36" cy="45" r="5"/><circle cx="50" cy="40" r="5.5"/><circle cx="64" cy="45" r="5"/><circle cx="43" cy="50" r="4"/><path d="M78 18c-6-5-13 1-9 9 8 1 13-4 9-9Z" stroke-width="2.4"/></svg>`,
+  plus: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>`,
+  minus: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>`,
+  trash: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="7" x2="20" y2="7"/><path d="M6 7l1 13h10l1-13"/><path d="M9 7V4h6v3"/></svg>`,
+  cartSmall: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h2l2.4 12.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.6L21 8H6.5"/><circle cx="10" cy="21" r="1.3" fill="currentColor" stroke="none"/><circle cx="18" cy="21" r="1.3" fill="currentColor" stroke="none"/></svg>`,
+  check: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.5 2.5L16 9"/></svg>`,
+  arrow: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg>`
+};
+
+const CATEGORIES = [
+  {id:"oils", label:"Oils", desc:"Cold-pressed oils for skin, hair and cooking", icon:"bottle"},
+  {id:"powders", label:"Herbs & Powders", desc:"Powders, roots and whole spices", icon:"powder"},
+  {id:"teas", label:"Teas", desc:"Loose herbal and green teas", icon:"tea"},
+  {id:"nuts", label:"Seeds & Nuts", desc:"Whole seeds, nuts and granola", icon:"nuts"}
+];
+
+const PRODUCTS = [
+  {id:1,  name:"Castor Oil",        cat:"oils",    size:"100ml", price:450, icon:"bottle", featured:false},
+  {id:2,  name:"Black Seed Oil",    cat:"oils",    size:"100ml", price:700, icon:"bottle", featured:true},
+  {id:3,  name:"Flax Seed Oil",     cat:"oils",    size:"100ml", price:650, icon:"bottle"},
+  {id:4,  name:"Coconut Oil",       cat:"oils",    size:"250ml", price:500, icon:"bottle"},
+  {id:5,  name:"Olive Oil",         cat:"oils",    size:"250ml", price:800, icon:"bottle"},
+  {id:6,  name:"Sweet Almond Oil",  cat:"oils",    size:"100ml", price:600, icon:"bottle"},
+  {id:7,  name:"Argan Oil",         cat:"oils",    size:"50ml",  price:900, icon:"bottle"},
+  {id:8,  name:"Moringa Powder",    cat:"powders", size:"100g",  price:350, icon:"powder", featured:true},
+  {id:9,  name:"Red Maca",          cat:"powders", size:"100g",  price:600, icon:"powder"},
+  {id:10, name:"Black Maca",        cat:"powders", size:"100g",  price:650, icon:"powder"},
+  {id:11, name:"Hibiscus Powder",   cat:"powders", size:"100g",  price:320, icon:"powder"},
+  {id:12, name:"Cloves",            cat:"powders", size:"100g",  price:280, icon:"leafSprig"},
+  {id:13, name:"Purple Tea",        cat:"teas",    size:"50g",   price:350, icon:"tea",    featured:true},
+  {id:14, name:"Green Tea",         cat:"teas",    size:"50g",   price:300, icon:"tea"},
+  {id:15, name:"Hibiscus Flowers",  cat:"teas",    size:"50g",   price:250, icon:"tea"},
+  {id:16, name:"Sunflower Seeds",   cat:"nuts",    size:"200g",  price:300, icon:"nuts"},
+  {id:17, name:"Pumpkin Seeds",     cat:"nuts",    size:"200g",  price:360, icon:"nuts"},
+  {id:18, name:"Walnuts",           cat:"nuts",    size:"250g",  price:700, icon:"nuts"},
+  {id:19, name:"Almonds",           cat:"nuts",    size:"250g",  price:650, icon:"nuts"},
+  {id:20, name:"Cashew Nuts",       cat:"nuts",    size:"250g",  price:750, icon:"nuts",   featured:true},
+  {id:21, name:"Granola",           cat:"nuts",    size:"400g",  price:500, icon:"nuts"}
+];
+
+const catLabel = id => (CATEGORIES.find(c => c.id === id) || {}).label || id;
+const catTint = id => ["powders","nuts"].includes(id) ? "var(--sage-light)" : "var(--clay-light)";
+
+let photos = {};
+let cart = {};
+let currentCat = "all";
+let currentSearch = "";
+let orderPlaced = false;
+
+document.getElementById("year").textContent = new Date().getFullYear();
+
+document.getElementById("artPowder").innerHTML = ICONS.powder;
+document.getElementById("artJar").innerHTML = ICONS.bottle;
+document.getElementById("artTea").innerHTML = ICONS.tea;
+document.getElementById("artNuts").innerHTML = ICONS.nuts;
+document.getElementById("artTea2").innerHTML = ICONS.tea;
+document.getElementById("artNuts2").innerHTML = ICONS.nuts;
+document.getElementById("artBottle2").innerHTML = ICONS.bottle;
+
+const catGrid = document.getElementById("catGrid");
+catGrid.innerHTML = CATEGORIES.map(c => `
+  <div class="cat-card" data-goto-cat="${c.id}">
+    <div class="cat-circle" style="background:${catTint(c.id)}">${ICONS[c.icon]}</div>
+    <h3>${c.label}</h3>
+    <p>${c.desc}</p>
+    <span class="cat-link">Shop ${c.label} ${ICONS.arrow}</span>
+  </div>
+`).join("");
+catGrid.querySelectorAll("[data-goto-cat]").forEach(el => {
+  el.addEventListener("click", () => goToShop(el.dataset.gotoCat));
+});
+
+function photoMarkup(p){
+  if(photos[p.id]) return `<img src="${photos[p.id]}" alt="${p.name}" loading="lazy">`;
+  return ICONS[p.icon];
+}
+
+function productCard(p){
+  return `
+  <div class="product-card">
+    <div class="product-photo" style="background:${catTint(p.cat)}">${photoMarkup(p)}</div>
+    <div class="product-body">
+      <div>
+        <div class="product-name">${p.name}</div>
+        <div class="product-size">${p.size}</div>
+      </div>
+      <div class="product-price">KSh ${p.price}</div>
+      <button class="add-btn" data-add="${p.id}">Add to Cart</button>
+    </div>
+  </div>`;
+}
+
+function renderFeatured(){
+  document.getElementById("featuredGrid").innerHTML =
+    PRODUCTS.filter(p => p.featured).map(productCard).join("");
+}
+
+const filterRow = document.getElementById("filterRow");
+function renderFilters(){
+  const chips = [{id:"all", label:"All Products"}, ...CATEGORIES.map(c=>({id:c.id,label:c.label}))];
+  filterRow.innerHTML = chips.map(c =>
+    `<button class="filter-chip ${currentCat===c.id?'active':''}" data-filter="${c.id}">${c.label}</button>`
+  ).join("");
+  filterRow.querySelectorAll("[data-filter]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      currentCat = btn.dataset.filter;
+      renderFilters();
+      renderShop();
+    });
+  });
+}
+renderFilters();
+
+function renderShop(){
+  const term = currentSearch.trim().toLowerCase();
+  const list = PRODUCTS.filter(p=>{
+    const matchesCat = currentCat === "all" || p.cat === currentCat;
+    const matchesTerm = !term || p.name.toLowerCase().includes(term) || catLabel(p.cat).toLowerCase().includes(term);
+    return matchesCat && matchesTerm;
+  });
+  const grid = document.getElementById("shopGrid");
+  const empty = document.getElementById("emptyState");
+  const heading = document.getElementById("shopHeading");
+  const count = document.getElementById("shopCount");
+
+  heading.textContent = currentCat === "all" ? "All Products" : catLabel(currentCat);
+  count.textContent = list.length + (list.length===1 ? " product" : " products");
+
+  if(list.length === 0){
+    grid.style.display = "none";
+    empty.style.display = "block";
+  } else {
+    grid.style.display = "grid";
+    empty.style.display = "none";
+    grid.innerHTML = list.map(productCard).join("");
+  }
+}
+
+async function loadPhotosFromServer(){
+  try {
+    const res = await fetch("/api/photos", { cache: "no-store" });
+    if(res.ok){
+      const data = await res.json();
+      if(data && typeof data === "object"){
+        photos = data;
+      }
+    }
+  } catch(e){
+    // offline or dev — keep whatever we have
+  }
+  renderFeatured();
+  renderShop();
+  updateCartUI();
+}
+
+document.body.addEventListener("click", e=>{
+  const btn = e.target.closest("[data-add]");
+  if(!btn) return;
+  const id = Number(btn.dataset.add);
+  addToCart(id);
+  const original = btn.textContent;
+  btn.classList.add("added");
+  btn.textContent = "In cart";
+  setTimeout(()=>{ btn.classList.remove("added"); btn.textContent = original; }, 1100);
+});
+
+const searchBox = document.getElementById("searchBox");
+const searchInput = document.getElementById("searchInput");
+document.getElementById("searchToggle").addEventListener("click", ()=>{
+  searchBox.classList.toggle("open");
+  if(searchBox.classList.contains("open")) searchInput.focus();
+});
+searchInput.addEventListener("input", e=>{
+  currentSearch = e.target.value;
+  renderShop();
+});
+searchInput.addEventListener("keydown", e=>{
+  if(e.key === "Enter"){ goToShop(currentCat); }
+});
+
+function goToShop(cat){
+  currentCat = cat || "all";
+  renderFilters();
+  renderShop();
+  document.getElementById("shop").scrollIntoView({behavior:"smooth"});
+}
+document.querySelectorAll("[data-scroll-shop]").forEach(el=>{
+  el.addEventListener("click", ()=> goToShop(el.dataset.scrollShop));
+});
+document.querySelectorAll("[data-scroll]").forEach(el=>{
+  el.addEventListener("click", ()=>{
+    document.querySelector(el.dataset.scroll).scrollIntoView({behavior:"smooth"});
+  });
+});
+document.querySelectorAll("[data-nav]").forEach(el=>{
+  el.addEventListener("click", e=>{
+    if(el.dataset.cat){
+      e.preventDefault();
+      goToShop(el.dataset.cat);
+    }
+    document.querySelectorAll("nav.main-nav a").forEach(a=>a.classList.remove("active"));
+    if(el.closest(".main-nav")) el.classList.add("active");
+  });
+});
+
+const mobileNav = document.getElementById("mobileNav");
+document.getElementById("menuToggle").addEventListener("click", ()=> mobileNav.classList.add("open"));
+document.getElementById("mobileNavClose").addEventListener("click", ()=> mobileNav.classList.remove("open"));
+mobileNav.addEventListener("click", e=>{ if(e.target === mobileNav) mobileNav.classList.remove("open"); });
+document.querySelectorAll("[data-close]").forEach(el=>{
+  el.addEventListener("click", ()=> mobileNav.classList.remove("open"));
+});
+
+function addToCart(id){
+  cart[id] = (cart[id]||0) + 1;
+  orderPlaced = false;
+  updateCartUI();
+  const p = PRODUCTS.find(x=>x.id===id);
+  showToast(`${p.name} — in cart`);
+}
+function changeQty(id, delta){
+  cart[id] = (cart[id]||0) + delta;
+  if(cart[id] <= 0) delete cart[id];
+  updateCartUI();
+}
+function removeFromCart(id){
+  delete cart[id];
+  updateCartUI();
+}
+function cartCountTotal(){
+  return Object.values(cart).reduce((a,b)=>a+b,0);
+}
+function cartSubtotal(){
+  return Object.entries(cart).reduce((sum,[id,qty])=>{
+    const p = PRODUCTS.find(x=>x.id===Number(id));
+    return sum + (p ? p.price*qty : 0);
+  },0);
+}
+function updateCartUI(){
+  const countEl = document.getElementById("cartCount");
+  if(!countEl) return;
+  const total = cartCountTotal();
+  countEl.textContent = total;
+  countEl.style.display = total>0 ? "flex" : "none";
+
+  const itemsEl = document.getElementById("cartItems");
+  const footEl = document.getElementById("cartFoot");
+  const ids = Object.keys(cart);
+
+  if(orderPlaced){
+    itemsEl.innerHTML = `<div class="order-success">${ICONS.check}<h4>Order received</h4><p>We'll confirm on WhatsApp before it ships.</p></div>`;
+    footEl.innerHTML = `<button class="btn btn-primary btn-block" id="continueShoppingBtn">Keep browsing</button>`;
+    document.getElementById("continueShoppingBtn").addEventListener("click", ()=>{
+      orderPlaced = false;
+      cart = {};
+      updateCartUI();
+      toggleCart(false);
+    });
+    return;
+  }
+
+  if(ids.length === 0){
+    itemsEl.innerHTML = `<div class="cart-empty">${ICONS.cartSmall}<p>Cart's empty. Pick something from the shop.</p></div>`;
+    footEl.innerHTML = `<button class="btn btn-primary btn-block" disabled>Place Order</button>`;
+    return;
+  }
+
+  itemsEl.innerHTML = ids.map(id=>{
+    const p = PRODUCTS.find(x=>x.id===Number(id));
+    const qty = cart[id];
+    return `
+    <div class="cart-item">
+      <div class="cart-thumb" style="background:${catTint(p.cat)}">${photoMarkup(p)}</div>
+      <div class="cart-item-info">
+        <div class="cart-item-top">
+          <div>
+            <div class="cart-item-name">${p.name}</div>
+            <div class="cart-item-size">${p.size}</div>
+          </div>
+          <button class="remove-btn" data-remove="${p.id}" aria-label="Remove ${p.name}">${ICONS.trash}</button>
+        </div>
+        <div class="cart-item-bottom">
+          <div class="qty-control">
+            <button data-qty="-1" data-id="${p.id}" aria-label="Decrease quantity">${ICONS.minus}</button>
+            <span>${qty}</span>
+            <button data-qty="1" data-id="${p.id}" aria-label="Increase quantity">${ICONS.plus}</button>
+          </div>
+          <div class="line-total">KSh ${p.price*qty}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+
+  const subtotal = cartSubtotal();
+  footEl.innerHTML = `
+    <div class="cart-subtotal"><span>Subtotal</span><span>KSh ${subtotal}</span></div>
+    <p class="cart-note">Delivery added at checkout.</p>
+    <button class="btn btn-primary btn-block" id="placeOrderBtn">Place Order</button>
+  `;
+
+  itemsEl.querySelectorAll("[data-qty]").forEach(btn=>{
+    btn.addEventListener("click", ()=> changeQty(Number(btn.dataset.id), Number(btn.dataset.qty)));
+  });
+  itemsEl.querySelectorAll("[data-remove]").forEach(btn=>{
+    btn.addEventListener("click", ()=> removeFromCart(Number(btn.dataset.remove)));
+  });
+  document.getElementById("placeOrderBtn").addEventListener("click", ()=>{
+    orderPlaced = true;
+    updateCartUI();
+  });
+}
+
+const cartOverlay = document.getElementById("cartOverlay");
+function toggleCart(open){
+  cartOverlay.classList.toggle("open", open);
+}
+document.getElementById("cartToggle").addEventListener("click", ()=> toggleCart(true));
+document.getElementById("cartClose").addEventListener("click", ()=> toggleCart(false));
+cartOverlay.addEventListener("click", e=>{ if(e.target === cartOverlay) toggleCart(false); });
+
+let toastTimer;
+function showToast(text){
+  const toast = document.getElementById("toast");
+  document.getElementById("toastText").textContent = text;
+  toast.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=> toast.classList.remove("show"), 2200);
+}
+
+const aboutModal = document.getElementById("aboutModal");
+document.getElementById("learnMoreBtn").addEventListener("click", ()=> aboutModal.classList.add("open"));
+document.getElementById("closeAboutModal").addEventListener("click", ()=> aboutModal.classList.remove("open"));
+aboutModal.addEventListener("click", e=>{ if(e.target===aboutModal) aboutModal.classList.remove("open"); });
+
+window.addEventListener("focus", loadPhotosFromServer);
+
+const sections = ["home","categories","shop","about","contact"].map(id=>document.getElementById(id)).filter(Boolean);
+window.addEventListener("scroll", ()=>{
+  let current = "home";
+  sections.forEach(sec=>{
+    if(window.scrollY + 120 >= sec.offsetTop) current = sec.id;
+  });
+  document.querySelectorAll("nav.main-nav a[data-nav]").forEach(a=>{
+    const target = a.getAttribute("href").replace("#","");
+    a.classList.toggle("active", target===current && !a.dataset.cat);
+  });
+}, {passive:true});
+
+/* Boot: render (with icons), then fetch photos from server */
+renderFeatured();
+renderShop();
+updateCartUI();
+loadPhotosFromServer();
+</script>
+</body>
+</html>
