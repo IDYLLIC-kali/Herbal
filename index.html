@@ -401,7 +401,7 @@
     <div class="how-grid">
       <div class="how-item"><div class="how-num">1</div><h3>Browse</h3><p>Look through the four categories.</p></div>
       <div class="how-item"><div class="how-num">2</div><h3>Add to Cart</h3><p>Pick what you need and set the quantity.</p></div>
-      <div class="how-item"><div class="how-num">3</div><h3>Checkout</h3><p>Pay by M-Pesa or card.</p></div>
+      <div class="how-item"><div class="how-num">3</div><h3>Checkout</h3><p>Send your order via WhatsApp.</p></div>
       <div class="how-item"><div class="how-num">4</div><h3>Delivery</h3><p>We drop it off or courier it to you.</p></div>
     </div>
   </div>
@@ -547,6 +547,9 @@ const PRODUCTS = [
   {id:21, name:"Granola",           cat:"nuts",    size:"400g",  price:500, icon:"nuts"}
 ];
 
+/* WhatsApp checkout — international format, digits only (no +, no spaces) */
+const WHATSAPP_NUMBER = "254748220487";
+
 const catLabel = id => (CATEGORIES.find(c => c.id === id) || {}).label || id;
 const catTint = id => ["powders","nuts"].includes(id) ? "var(--sage-light)" : "var(--clay-light)";
 
@@ -655,7 +658,7 @@ async function loadPhotosFromServer(){
       }
     }
   } catch(e){
-    // offline or dev — keep whatever we have
+    /* offline — keep whatever we have */
   }
   renderFeatured();
   renderShop();
@@ -745,6 +748,27 @@ function cartSubtotal(){
     return sum + (p ? p.price*qty : 0);
   },0);
 }
+
+function buildWhatsAppMessage(){
+  const ids = Object.keys(cart);
+  const lines = [];
+  lines.push("Hi Herbal Haven, I'd like to order:");
+  lines.push("");
+  ids.forEach(id => {
+    const p = PRODUCTS.find(x => x.id === Number(id));
+    if(!p) return;
+    const qty = cart[id];
+    const lineTotal = p.price * qty;
+    lines.push(`• ${p.name} (${p.size}) × ${qty} — KSh ${lineTotal}`);
+  });
+  lines.push("");
+  lines.push(`Subtotal: KSh ${cartSubtotal()}`);
+  lines.push("Delivery: to be arranged");
+  lines.push("");
+  lines.push("Please confirm availability and total including delivery. Thank you.");
+  return lines.join("\n");
+}
+
 function updateCartUI(){
   const countEl = document.getElementById("cartCount");
   if(!countEl) return;
@@ -757,8 +781,11 @@ function updateCartUI(){
   const ids = Object.keys(cart);
 
   if(orderPlaced){
-    itemsEl.innerHTML = `<div class="order-success">${ICONS.check}<h4>Order received</h4><p>We'll confirm on WhatsApp before it ships.</p></div>`;
-    footEl.innerHTML = `<button class="btn btn-primary btn-block" id="continueShoppingBtn">Keep browsing</button>`;
+    itemsEl.innerHTML = `<div class="order-success">${ICONS.check}<h4>Opening WhatsApp…</h4><p>Send the pre-filled message to confirm your order. We'll reply there with delivery details.</p></div>`;
+    footEl.innerHTML = `
+      <a class="btn btn-primary btn-block" id="whatsappOpenBtn" href="#" target="_blank" rel="noopener">Open WhatsApp again</a>
+      <button class="btn btn-outline btn-block" id="continueShoppingBtn" style="margin-top:10px;">Keep browsing</button>
+    `;
     document.getElementById("continueShoppingBtn").addEventListener("click", ()=>{
       orderPlaced = false;
       cart = {};
@@ -804,7 +831,7 @@ function updateCartUI(){
   footEl.innerHTML = `
     <div class="cart-subtotal"><span>Subtotal</span><span>KSh ${subtotal}</span></div>
     <p class="cart-note">Delivery added at checkout.</p>
-    <button class="btn btn-primary btn-block" id="placeOrderBtn">Place Order</button>
+    <button class="btn btn-primary btn-block" id="placeOrderBtn">Place Order on WhatsApp</button>
   `;
 
   itemsEl.querySelectorAll("[data-qty]").forEach(btn=>{
@@ -814,8 +841,13 @@ function updateCartUI(){
     btn.addEventListener("click", ()=> removeFromCart(Number(btn.dataset.remove)));
   });
   document.getElementById("placeOrderBtn").addEventListener("click", ()=>{
+    const message = buildWhatsAppMessage();
+    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+    window.open(url, "_blank", "noopener");
     orderPlaced = true;
     updateCartUI();
+    const again = document.getElementById("whatsappOpenBtn");
+    if(again) again.href = url;
   });
 }
 
@@ -855,7 +887,6 @@ window.addEventListener("scroll", ()=>{
   });
 }, {passive:true});
 
-/* Boot: render (with icons), then fetch photos from server */
 renderFeatured();
 renderShop();
 updateCartUI();
