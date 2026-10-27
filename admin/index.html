@@ -25,16 +25,17 @@
   a{color:inherit; text-decoration:none;}
   button{font-family:inherit; cursor:pointer; border:none; background:none; color:inherit;}
   svg{display:block; max-width:100%;}
-  .icon{width:20px; height:20px;}
 
   .admin-shell{max-width:980px; margin:0 auto; padding:40px 32px 80px;}
-  .admin-topbar{display:flex; align-items:center; justify-content:space-between; gap:16px; padding-bottom:22px; border-bottom:1px solid var(--line); margin-bottom:28px;}
+  .admin-topbar{display:flex; align-items:center; justify-content:space-between; gap:16px; padding-bottom:22px; border-bottom:1px solid var(--line); margin-bottom:28px; flex-wrap:wrap;}
   .admin-brand{display:flex; align-items:center; gap:10px;}
   .admin-brand svg{width:32px; height:32px; color:var(--forest);}
   .admin-brand strong{font-family:'Fraunces',serif; font-size:1.15rem; color:var(--forest); font-style:italic; font-weight:600;}
   .admin-brand span{display:block; font-size:0.62rem; letter-spacing:0.14em; color:var(--ink-soft); font-weight:600;}
-  .admin-back{font-size:0.82rem; color:var(--forest); font-weight:600; display:inline-flex; align-items:center; gap:6px; padding:8px 14px; border-radius:var(--radius-pill); border:1px solid var(--line);}
-  .admin-back:hover{background:var(--sage-light);}
+  .admin-topbar-actions{display:flex; gap:8px; flex-wrap:wrap;}
+  .admin-back, .admin-logout{font-size:0.82rem; color:var(--forest); font-weight:600; display:inline-flex; align-items:center; gap:6px; padding:8px 14px; border-radius:var(--radius-pill); border:1px solid var(--line);}
+  .admin-back:hover, .admin-logout:hover{background:var(--sage-light);}
+  .admin-logout:hover{border-color:#B4472F; color:#B4472F; background:var(--clay-light);}
 
   .admin-head h1{font-size:1.6rem; margin-bottom:6px;}
   .admin-head p{font-size:0.88rem; margin-bottom:20px;}
@@ -43,19 +44,8 @@
   .admin-note strong{color:var(--forest);}
   .admin-note code{background:rgba(37,57,31,0.08); padding:1px 6px; border-radius:4px; font-size:0.82em;}
 
-  /* Warning shown when opened from file:// (no server) */
-  .admin-fatal{
-    background:#FBE9E4; border-left:3px solid #B4472F; border-radius:10px;
-    padding:16px 18px; font-size:0.88rem; color:#7A2415; margin-bottom:26px;
-    display:none;
-  }
+  .admin-fatal{background:#FBE9E4; border-left:3px solid #B4472F; border-radius:10px; padding:16px 18px; font-size:0.88rem; color:#7A2415; margin-bottom:26px; display:none;}
   .admin-fatal.show{display:block;}
-  .admin-fatal strong{display:block; margin-bottom:6px; font-size:0.95rem;}
-  .admin-fatal code{background:rgba(122,36,21,0.08); padding:1px 6px; border-radius:4px; font-size:0.82em;}
-  .admin-fatal pre{
-    background:rgba(122,36,21,0.06); padding:10px 12px; border-radius:8px;
-    font-size:0.78rem; margin-top:10px; overflow-x:auto;
-  }
 
   .admin-actions-bar{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:24px;}
   .btn{display:inline-flex; align-items:center; gap:8px; padding:11px 20px; border-radius:var(--radius-pill); font-weight:600; font-size:0.88rem; transition:background 0.15s ease, transform 0.15s ease;}
@@ -68,7 +58,6 @@
   .btn[disabled]{opacity:0.45; cursor:not-allowed; transform:none;}
 
   .admin-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:18px;}
-
   .admin-card{background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:16px; display:flex; gap:16px; align-items:center;}
   .admin-thumb{width:80px; height:80px; border-radius:10px; background:var(--sage-light); flex-shrink:0; display:flex; align-items:center; justify-content:center; padding:14px; color:var(--forest); overflow:hidden; position:relative;}
   .admin-thumb svg{width:100%; height:100%;}
@@ -80,14 +69,24 @@
   .admin-actions label{display:inline-flex; align-items:center; gap:6px; padding:8px 14px; border-radius:var(--radius-pill); background:var(--forest); color:var(--cream-soft); font-size:0.8rem; font-weight:600; cursor:pointer; transition:background 0.15s ease;}
   .admin-actions label:hover{background:var(--forest-dark);}
   .admin-actions label.uploading{background:var(--sage); pointer-events:none;}
-  .admin-actions label.disabled{opacity:0.4; pointer-events:none;}
   .admin-actions label svg{width:14px; height:14px;}
   .admin-actions input[type="file"]{display:none;}
   .admin-clear{padding:8px 14px; border-radius:var(--radius-pill); border:1px solid var(--line); color:var(--ink-soft); font-size:0.8rem; font-weight:600;}
   .admin-clear:hover{border-color:#B4472F; color:#B4472F; background:var(--clay-light);}
-  .admin-clear:disabled{opacity:0.4; pointer-events:none;}
-
   .admin-error{font-size:0.76rem; color:#B4472F; margin-top:6px;}
+
+  .settings-card{background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:24px; margin-bottom:24px;}
+  .settings-card h2{font-size:1.15rem; margin-bottom:6px;}
+  .settings-card p.sub{font-size:0.84rem; margin-bottom:18px;}
+  .form-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:14px;}
+  .field{display:flex; flex-direction:column; gap:6px;}
+  .field label{font-size:0.8rem; font-weight:600; color:var(--forest);}
+  .field input{padding:10px 14px; border-radius:10px; border:1px solid var(--line); background:var(--cream-soft); font-size:0.9rem; color:var(--ink); outline:none; transition:border-color 0.15s ease;}
+  .field input:focus{border-color:var(--forest);}
+  .form-actions{margin-top:16px; display:flex; gap:10px; align-items:center; flex-wrap:wrap;}
+  .form-msg{font-size:0.82rem; margin-top:8px;}
+  .form-msg.ok{color:var(--forest);}
+  .form-msg.err{color:#B4472F;}
 
   .admin-toast{position:fixed; bottom:26px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--forest); color:var(--cream-soft); padding:12px 22px; border-radius:var(--radius-pill); font-size:0.86rem; font-weight:500; display:flex; align-items:center; gap:10px; box-shadow:var(--shadow); opacity:0; pointer-events:none; transition:all 0.25s ease; z-index:110;}
   .admin-toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
@@ -98,6 +97,7 @@
     .admin-shell{padding:24px 18px 60px;}
     .admin-grid{grid-template-columns:1fr;}
     .admin-thumb{width:64px; height:64px;}
+    .form-grid{grid-template-columns:1fr;}
   }
 </style>
 </head>
@@ -112,10 +112,16 @@
         <span>OWNER TOOLS</span>
       </div>
     </div>
-    <button type="button" class="admin-back" id="viewStorefrontBtn">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="20" y1="12" x2="5" y2="12"/><polyline points="11 18 5 12 11 6"/></svg>
-      View storefront
-    </button>
+    <div class="admin-topbar-actions">
+      <button type="button" class="admin-back" id="viewStorefrontBtn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="20" y1="12" x2="5" y2="12"/><polyline points="11 18 5 12 11 6"/></svg>
+        Storefront
+      </button>
+      <button type="button" class="admin-logout" id="logoutBtn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Sign out
+      </button>
+    </div>
   </div>
 
   <div class="admin-head">
@@ -125,11 +131,7 @@
 
   <div class="admin-fatal" id="fileWarning">
     <strong>This page needs the server to work.</strong>
-    You opened this file directly from disk (<code>file://</code>). That's why there was no password prompt and why links point at local folders.
-    Start the server, then open <code>http://localhost:3000/admin/</code> instead.
-    <pre>cd path/to/project
-npm install
-ADMIN_USER=owner ADMIN_PASS="pick-a-strong-password" npm start</pre>
+    You opened this file directly from disk (<code>file://</code>). Start the server, then open <code>http://localhost:3000/admin/</code>.
   </div>
 
   <div class="admin-note">
@@ -144,6 +146,39 @@ ADMIN_USER=owner ADMIN_PASS="pick-a-strong-password" npm start</pre>
   </div>
 
   <div class="admin-grid" id="adminGrid"></div>
+
+  <div style="margin-top:40px;">
+    <h2 style="font-size:1.3rem; margin-bottom:14px;">Account settings</h2>
+
+    <div class="settings-card">
+      <h2>Change username &amp; password</h2>
+      <p class="sub">You must enter your current password to change these. Changes take effect immediately.</p>
+      <form id="changeCredsForm" autocomplete="off">
+        <div class="form-grid">
+          <div class="field">
+            <label for="currentPassword">Current password</label>
+            <input type="password" id="currentPassword" required autocomplete="current-password">
+          </div>
+          <div class="field">
+            <label for="newUsername">New username</label>
+            <input type="text" id="newUsername" required minlength="3" maxlength="32" autocomplete="username">
+          </div>
+          <div class="field">
+            <label for="newPassword">New password</label>
+            <input type="password" id="newPassword" required minlength="8" autocomplete="new-password">
+          </div>
+          <div class="field">
+            <label for="confirmPassword">Confirm new password</label>
+            <input type="password" id="confirmPassword" required minlength="8" autocomplete="new-password">
+          </div>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" id="saveCredsBtn">Save changes</button>
+          <span class="form-msg" id="credsMsg"></span>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
 
 <div class="admin-toast" id="adminToast">
@@ -152,19 +187,28 @@ ADMIN_USER=owner ADMIN_PASS="pick-a-strong-password" npm start</pre>
 </div>
 
 <script>
-/* Detect file:// before anything else and warn clearly. */
 const IS_FILE_PROTOCOL = window.location.protocol === "file:";
 if(IS_FILE_PROTOCOL){
   document.getElementById("fileWarning").classList.add("show");
 }
 
-/* "View storefront" always goes to the HTTP origin, never to a folder on disk. */
 document.getElementById("viewStorefrontBtn").addEventListener("click", () => {
   if(IS_FILE_PROTOCOL){
     showToast("Start the server, then open http://localhost:3000/admin/", true);
     return;
   }
   window.location.href = window.location.origin + "/";
+});
+
+document.getElementById("logoutBtn").addEventListener("click", () => {
+  // Trick the browser into dropping the cached Basic-auth credentials:
+  // send a deliberately wrong header for the same realm, then navigate.
+  fetch("/admin/", {
+    headers: { "Authorization": "Basic " + btoa("logout:logout") },
+    cache: "no-store"
+  }).finally(() => {
+    window.location.href = "/";
+  });
 });
 
 const ICONS = {
@@ -237,7 +281,7 @@ function renderAdmin(){
     </div>
   `;}).join("");
 
-  if(IS_FILE_PROTOCOL) return; // no wiring when opened from disk
+  if(IS_FILE_PROTOCOL) return;
 
   adminGrid.querySelectorAll("input[data-upload]").forEach(input => {
     input.addEventListener("change", async e => {
@@ -318,7 +362,7 @@ async function loadFromServer(){
     return;
   }
   try {
-    const res = await fetch("/api/photos", { cache: "no-store" });
+    const res = await fetch("/api/photos", { cache: "no-store", credentials: "same-origin" });
     if(!res.ok){
       throw new Error(`Server returned ${res.status}`);
     }
@@ -331,6 +375,58 @@ async function loadFromServer(){
 }
 
 document.getElementById("refreshBtn").addEventListener("click", () => loadFromServer());
+
+/* ===== Change credentials ===== */
+const changeCredsForm = document.getElementById("changeCredsForm");
+changeCredsForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const msg = document.getElementById("credsMsg");
+  msg.className = "form-msg";
+  msg.textContent = "";
+
+  const currentPassword = document.getElementById("currentPassword").value;
+  const newUsername = document.getElementById("newUsername").value.trim();
+  const newPassword = document.getElementById("newPassword").value;
+  const confirmPassword = document.getElementById("confirmPassword").value;
+
+  if(newPassword !== confirmPassword){
+    msg.classList.add("err");
+    msg.textContent = "New password and confirmation do not match.";
+    return;
+  }
+
+  const btn = document.getElementById("saveCredsBtn");
+  btn.disabled = true;
+  btn.textContent = "Saving…";
+
+  try {
+    const res = await fetch("/api/credentials", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "same-origin",
+      body: JSON.stringify({ currentPassword, newUsername, newPassword })
+    });
+    const data = await res.json().catch(()=>({}));
+    if(!res.ok){
+      throw new Error(data.error || `Save failed (${res.status})`);
+    }
+    msg.classList.add("ok");
+    msg.textContent = `Saved. New username: ${data.username}. You'll be asked to sign in again on the next request.`;
+    changeCredsForm.reset();
+    showToast("Credentials updated");
+    // Force a fresh sign-in so the browser doesn't silently reuse the old ones
+    setTimeout(() => {
+      window.location.reload();
+    }, 1500);
+  } catch(err){
+    msg.classList.add("err");
+    msg.textContent = err.message || "Save failed";
+    showToast(err.message || "Save failed", true);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Save changes";
+  }
+});
 
 let toastTimer;
 function showToast(text, isError){
