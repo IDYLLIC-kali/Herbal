@@ -201,8 +201,6 @@ document.getElementById("viewStorefrontBtn").addEventListener("click", () => {
 });
 
 document.getElementById("logoutBtn").addEventListener("click", () => {
-  // Trick the browser into dropping the cached Basic-auth credentials:
-  // send a deliberately wrong header for the same realm, then navigate.
   fetch("/admin/", {
     headers: { "Authorization": "Basic " + btoa("logout:logout") },
     cache: "no-store"
@@ -376,7 +374,6 @@ async function loadFromServer(){
 
 document.getElementById("refreshBtn").addEventListener("click", () => loadFromServer());
 
-/* ===== Change credentials ===== */
 const changeCredsForm = document.getElementById("changeCredsForm");
 changeCredsForm.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -414,7 +411,6 @@ changeCredsForm.addEventListener("submit", async (e) => {
     msg.textContent = `Saved. New username: ${data.username}. You'll be asked to sign in again on the next request.`;
     changeCredsForm.reset();
     showToast("Credentials updated");
-    // Force a fresh sign-in so the browser doesn't silently reuse the old ones
     setTimeout(() => {
       window.location.reload();
     }, 1500);
