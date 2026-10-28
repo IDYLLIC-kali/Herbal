@@ -57,7 +57,7 @@
   nav.main-nav a{font-size:0.9rem; font-weight:500; color:var(--text-main); position:relative; padding:4px 0; transition:color 0.2s;}
   nav.main-nav a:hover, nav.main-nav a.active{color:var(--brand-green);}
   nav.main-nav a.active::after{content:""; position:absolute; left:0; right:0; bottom:-4px; height:2px; background:var(--brand-green);}
-  .nav-dropdown{display:flex; align-items:center; gap:4px;}
+  .nav-dropdown{display:flex; align-items:center; gap:4px; cursor:pointer;}
   .nav-dropdown svg{width:12px; height:12px;}
 
   .header-actions{display:flex; align-items:center; gap:16px;}
@@ -146,12 +146,17 @@
   .footer-col a{display:block; font-size:0.85rem; color:#d1ded0; margin-bottom:10px; transition:color 0.2s;}
   .footer-col a:hover{color:#fff;}
   .footer-bottom{border-top:1px solid rgba(255,255,255,0.1); padding:20px 24px; max-width:1280px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; font-size:0.75rem; color:#a8b8a3;}
+  
+  /* Secret Admin Link */
+  .secret-admin{color: #2c4a38; text-decoration: none; transition: color 0.2s;}
+  .secret-admin:hover{color: var(--brand-gold);}
+
   .social-icons{display:flex; gap:16px;}
   .social-icons a{color:#fff; opacity:0.8;}
   .social-icons a:hover{opacity:1;}
   .social-icons svg{width:18px; height:18px;}
 
-  /* Cart Drawer & Modal & Toast (Same logic as before, restyled) */
+  /* Cart Drawer & Modal & Toast */
   .overlay{position:fixed; inset:0; background:rgba(26,58,40,0.5); z-index:90; opacity:0; pointer-events:none; transition:opacity 0.3s;}
   .overlay.open{opacity:1; pointer-events:auto;}
   .cart-drawer{position:fixed; top:0; right:0; height:100%; width:min(400px,100vw); background:var(--bg-main); z-index:95; transform:translateX(100%); transition:transform 0.3s ease; display:flex; flex-direction:column;}
@@ -349,7 +354,11 @@
     </div>
   </div>
   <div class="footer-bottom">
-    <div>&copy; <span id="year"></span> Betti Naturals. All rights reserved.</div>
+    <div>
+      &copy; <span id="year"></span> Betti Naturals. All rights reserved. 
+      <!-- Hidden Owner Access Link -->
+      <a href="/admin/" class="secret-admin" title="Owner Dashboard">&bull;</a>
+    </div>
     <div class="social-icons">
       <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
       <a href="#" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg></a>
