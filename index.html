@@ -40,30 +40,26 @@
   section{padding:80px 0;}
   .icon{width:20px; height:20px; flex-shrink:0;}
   
-  /* Top Bar - Now Gold and Highly Visible */
-  .top-bar{background:var(--brand-gold); color:var(--brand-green); font-size:0.75rem; text-transform:uppercase; letter-spacing:0.08em; padding:10px 0; font-weight: 600;}
-  .top-bar .wrap{display:flex; justify-content:center; align-items:center;}
-  .top-bar-links{display:flex; gap:16px; align-items:center;}
-  .top-bar-links svg{width:14px; height:14px;}
-  .top-bar-links span:not(:last-child)::after{content:"|"; margin-left:16px; opacity:0.5;}
-  
-  /* Header */
-  header{background:var(--bg-main); border-bottom:1px solid var(--border-color); position:sticky; top:0; z-index:60;}
+  /* Header - Dark Green Background */
+  header{background:var(--brand-green); position:sticky; top:0; z-index:60;}
   .header-inner{display:flex; align-items:center; justify-content:space-between; padding:16px 24px; max-width:1280px; margin:0 auto; gap:24px;}
   
-  .logo-img{height:60px; width:auto; object-fit:contain;}
+  /* Logo stays in a white box so it pops against the dark green */
+  .logo{background:#fff; padding:8px 16px; border-radius:4px; display:flex; align-items:center; justify-content:center;}
+  .logo-img{height:50px; width:auto; object-fit:contain;}
   .footer-logo-img{height:70px; width:auto; object-fit:contain; margin-bottom:16px;}
   
   nav.main-nav{display:flex; gap:32px; align-items:center;}
-  nav.main-nav a{font-size:0.9rem; font-weight:500; color:var(--text-main); position:relative; padding:4px 0; transition:color 0.2s;}
-  nav.main-nav a:hover, nav.main-nav a.active{color:var(--brand-green);}
-  nav.main-nav a.active::after{content:""; position:absolute; left:0; right:0; bottom:-4px; height:2px; background:var(--brand-green);}
-  .nav-dropdown{display:flex; align-items:center; gap:4px; cursor:pointer;}
+  nav.main-nav a{font-size:0.9rem; font-weight:500; color:#fff; position:relative; padding:4px 0; transition:color 0.2s;}
+  nav.main-nav a:hover, nav.main-nav a.active{color:var(--brand-gold);}
+  nav.main-nav a.active::after{content:""; position:absolute; left:0; right:0; bottom:-4px; height:2px; background:var(--brand-gold);}
+  .nav-dropdown{display:flex; align-items:center; gap:4px; cursor:pointer; color:#fff;}
+  .nav-dropdown:hover{color:var(--brand-gold);}
   .nav-dropdown svg{width:12px; height:12px;}
 
   .header-actions{display:flex; align-items:center; gap:20px;}
-  .icon-btn{color:var(--brand-green); position:relative; transition:opacity 0.2s;}
-  .icon-btn:hover{opacity:0.7;}
+  .icon-btn{color:#fff; position:relative; transition:opacity 0.2s;}
+  .icon-btn:hover{opacity:0.7; color:var(--brand-gold);}
   .icon-btn svg{width:22px; height:22px; stroke-width:1.5;}
   .cart-count{position:absolute; top:-4px; right:-8px; background:var(--brand-gold); color:#fff; font-size:0.65rem; font-weight:700; min-width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center; padding:0 3px;}
 
@@ -221,15 +217,7 @@
 </head>
 <body>
 
-<div class="top-bar">
-  <div class="wrap">
-    <div class="top-bar-links">
-      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22C6.5 22 2 17.5 2 12S6.5 2 12 2s10 4.5 10 10-4.5 10-10 10z"/><path d="M12 6v6l4 2"/></svg> Pure Herbs</span>
-      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg> Natural Oils</span>
-      <span>Herbaceous Delights</span>
-    </div>
-  </div>
-</div>
+<!-- Top Bar Removed -->
 
 <header>
   <div class="header-inner">
