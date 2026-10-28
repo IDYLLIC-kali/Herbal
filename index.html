@@ -48,10 +48,10 @@
   
   /* Header */
   header{background:var(--bg-main); border-bottom:1px solid var(--border-color); position:sticky; top:0; z-index:60;}
-  .header-inner{display:flex; align-items:center; justify-content:space-between; padding:20px 24px; max-width:1280px; margin:0 auto; gap:24px;}
-  .logo{display:flex; flex-direction:column; align-items:center; line-height:1;}
-  .logo-text strong{font-family:'Playfair Display', serif; font-size:1.8rem; color:var(--brand-green); font-weight:600; letter-spacing:-0.02em;}
-  .logo-text span{font-size:0.75rem; font-style:italic; color:var(--brand-gold); font-family:'Playfair Display', serif; margin-top:2px;}
+  .header-inner{display:flex; align-items:center; justify-content:space-between; padding:16px 24px; max-width:1280px; margin:0 auto; gap:24px;}
+  
+  .logo-img{height:60px; width:auto; object-fit:contain;}
+  .footer-logo-img{height:70px; width:auto; object-fit:contain; margin-bottom:16px;}
   
   nav.main-nav{display:flex; gap:32px; align-items:center;}
   nav.main-nav a{font-size:0.9rem; font-weight:500; color:var(--text-main); position:relative; padding:4px 0; transition:color 0.2s;}
@@ -140,7 +140,6 @@
   /* Footer */
   footer{background:var(--brand-green); color:#fff; padding-top:60px;}
   .footer-top{display:grid; grid-template-columns:1.5fr 1fr 1fr 1fr; gap:40px; max-width:1280px; margin:0 auto; padding:0 24px 40px;}
-  .footer-brand .logo-text strong{color:#fff;}
   .footer-brand p{color:#a8b8a3; font-size:0.85rem; margin-top:16px; max-width:250px;}
   .footer-col h4{font-family:'Inter', sans-serif; font-size:0.85rem; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:16px; color:var(--brand-gold);}
   .footer-col a{display:block; font-size:0.85rem; color:#d1ded0; margin-bottom:10px; transition:color 0.2s;}
@@ -224,8 +223,9 @@
 
 <header>
   <div class="header-inner">
-    <a href="#home" class="logo">
-      <span class="logo-text"><strong>Betti Naturals</strong><span>herbaceous delights</span></span>
+    <a href="#home" class="logo" aria-label="Betti Naturals home">
+      <!-- Uses the logo image you saved -->
+      <img src="logo.jpg" alt="Betti Naturals" class="logo-img">
     </a>
     <nav class="main-nav" id="mainNav">
       <a href="#home" class="active" data-nav>Home</a>
@@ -328,7 +328,8 @@
   <div class="footer-top">
     <div class="footer-brand">
       <a href="#home" class="logo">
-        <span class="logo-text"><strong>Betti Naturals</strong><span style="color:var(--brand-gold);">herbaceous delights</span></span>
+        <!-- Uses the logo image you saved -->
+        <img src="logo.jpg" alt="Betti Naturals" class="footer-logo-img">
       </a>
       <p>Bringing you natural care, wellness, and beauty, straight from the earth.</p>
     </div>
