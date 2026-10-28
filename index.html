@@ -40,6 +40,13 @@
   section{padding:80px 0;}
   .icon{width:20px; height:20px; flex-shrink:0;}
   
+  /* Top Bar - Now Gold and Highly Visible */
+  .top-bar{background:var(--brand-gold); color:var(--brand-green); font-size:0.75rem; text-transform:uppercase; letter-spacing:0.08em; padding:10px 0; font-weight: 600;}
+  .top-bar .wrap{display:flex; justify-content:center; align-items:center;}
+  .top-bar-links{display:flex; gap:16px; align-items:center;}
+  .top-bar-links svg{width:14px; height:14px;}
+  .top-bar-links span:not(:last-child)::after{content:"|"; margin-left:16px; opacity:0.5;}
+  
   /* Header */
   header{background:var(--bg-main); border-bottom:1px solid var(--border-color); position:sticky; top:0; z-index:60;}
   .header-inner{display:flex; align-items:center; justify-content:space-between; padding:16px 24px; max-width:1280px; margin:0 auto; gap:24px;}
@@ -213,6 +220,16 @@
 </style>
 </head>
 <body>
+
+<div class="top-bar">
+  <div class="wrap">
+    <div class="top-bar-links">
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22C6.5 22 2 17.5 2 12S6.5 2 12 2s10 4.5 10 10-4.5 10-10 10z"/><path d="M12 6v6l4 2"/></svg> Pure Herbs</span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg> Natural Oils</span>
+      <span>Herbaceous Delights</span>
+    </div>
+  </div>
+</div>
 
 <header>
   <div class="header-inner">
