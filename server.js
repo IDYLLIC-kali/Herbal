@@ -146,7 +146,7 @@ function basicAuth(req, res, next){
       if(verifyCredentials(user, pass)) return next();
     }
   }
-  res.set("WWW-Authenticate", 'Basic realm="Herbal Haven Admin", charset="UTF-8"');
+  res.set("WWW-Authenticate", 'Basic realm="Betti Naturals Admin", charset="UTF-8"');
   return res.status(401).send("Authentication required");
 }
 
@@ -299,7 +299,7 @@ await bootstrapAuth();
 await rebuildPhotosFromCloudinary();
 
 app.listen(PORT, () => {
-  console.log(`Herbal Haven running on http://localhost:${PORT}`);
+  console.log(`Betti Naturals running on http://localhost:${PORT}`);
   console.log(`Storefront: /     Admin: /admin`);
   console.log(`Photos go to Cloudinary cloud: ${process.env.CLOUDINARY_CLOUD_NAME}`);
 });
