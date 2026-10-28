@@ -10,19 +10,20 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --brand-green: #1a3a28;
-    --brand-green-hover: #12291c;
-    --brand-gold: #cda875;
+    /* Exact colors from the image */
+    --brand-green: #0b3b24; /* Dark forest green for footer & buttons */
+    --brand-green-hover: #072a19;
+    --brand-gold: #cda875; /* Gold for accents & buttons */
     --brand-gold-hover: #b89362;
-    --bg-main: #f9f8f4;
+    --bg-main: #f8f6f0; /* Cream background */
     --bg-card: #ffffff;
-    --bg-light-sage: #eaeee5;
+    --bg-light-sage: #e6ece2;
     --text-main: #2c332b;
     --text-muted: #5c665a;
     --border-color: #e5e9e1;
     --radius: 4px;
     --radius-pill: 999px;
-    --shadow: 0 4px 20px rgba(26, 58, 40, 0.05);
+    --shadow: 0 4px 20px rgba(11, 59, 36, 0.05);
   }
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
@@ -43,7 +44,8 @@
   /* Top Bar */
   .top-bar{background:var(--brand-green); color:#fff; font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em; padding:8px 0;}
   .top-bar .wrap{display:flex; justify-content:space-between; align-items:center;}
-  .top-bar-links{display:flex; gap:16px;}
+  .top-bar-links{display:flex; gap:16px; align-items:center;}
+  .top-bar-links svg{width:14px; height:14px;}
   .top-bar-links span:not(:last-child)::after{content:"|"; margin-left:16px; opacity:0.3;}
   
   /* Header */
@@ -60,11 +62,11 @@
   .nav-dropdown{display:flex; align-items:center; gap:4px; cursor:pointer;}
   .nav-dropdown svg{width:12px; height:12px;}
 
-  .header-actions{display:flex; align-items:center; gap:16px;}
-  .icon-btn{width:36px; height:36px; display:flex; align-items:center; justify-content:center; border-radius:50%; color:var(--brand-green); position:relative; transition:background 0.15s ease;}
-  .icon-btn:hover{background:var(--bg-light-sage);}
+  .header-actions{display:flex; align-items:center; gap:20px;}
+  .icon-btn{color:var(--brand-green); position:relative; transition:opacity 0.2s;}
+  .icon-btn:hover{opacity:0.7;}
   .icon-btn svg{width:22px; height:22px; stroke-width:1.5;}
-  .cart-count{position:absolute; top:-2px; right:-4px; background:var(--brand-gold); color:#fff; font-size:0.65rem; font-weight:700; min-width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center; padding:0 3px;}
+  .cart-count{position:absolute; top:-4px; right:-8px; background:var(--brand-gold); color:#fff; font-size:0.65rem; font-weight:700; min-width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center; padding:0 3px;}
 
   /* Buttons */
   .btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:12px 24px; border-radius:var(--radius-pill); font-weight:500; font-size:0.9rem; transition:all 0.2s ease; cursor:pointer;}
@@ -76,8 +78,8 @@
   .btn-outline:hover{background:var(--brand-green); color:#fff;}
 
   /* Hero */
-  .hero{position:relative; background: #e8ede4; padding:80px 0; display:flex; align-items:center; min-height:500px;}
-  .hero-bg{position:absolute; inset:0; background-image:url('https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80'); background-size:cover; background-position:center; opacity:0.15;}
+  .hero{position:relative; background: #e8ede4; padding:80px 0; display:flex; align-items:center; min-height:500px; overflow:hidden;}
+  .hero-bg{position:absolute; inset:0; background-image:url('https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80'); background-size:cover; background-position:center; opacity:0.25;}
   .hero-inner{position:relative; z-index:2; max-width:1280px; margin:0 auto; padding:0 24px; width:100%;}
   .hero-content{max-width:600px;}
   .hero-eyebrow{font-size:0.8rem; text-transform:uppercase; letter-spacing:0.1em; font-weight:600; color:var(--brand-green); margin-bottom:16px;}
@@ -108,7 +110,7 @@
   .product-photo{aspect-ratio:1/1; display:flex; align-items:center; justify-content:center; padding:20%; position:relative; background:#f0f2ed; overflow:hidden;}
   .product-photo svg{width:100%; height:100%; color:var(--brand-green); opacity:0.8;}
   .product-photo img{width:100%; height:100%; object-fit:cover; position:absolute; inset:0;}
-  .product-badge{position:absolute; top:12px; left:12px; background:var(--brand-green); color:#fff; font-size:0.65rem; font-weight:600; text-transform:uppercase; padding:4px 10px; border-radius:4px; letter-spacing:0.05em;}
+  .product-badge{position:absolute; top:12px; left:12px; background:var(--brand-green); color:#fff; font-size:0.65rem; font-weight:600; text-transform:uppercase; padding:4px 10px; border-radius:4px; letter-spacing:0.05em; z-index:2;}
   .product-badge.new{background:var(--brand-gold);}
   .product-body{padding:20px; display:flex; flex-direction:column; flex:1;}
   .product-name{font-family:'Playfair Display', serif; font-size:1.15rem; font-weight:600; color:var(--brand-green); margin-bottom:6px;}
@@ -137,13 +139,29 @@
   .about-content h2{font-size:2.2rem; margin-bottom:20px;}
   .about-content p{margin-bottom:30px; font-size:1rem;}
 
+  /* Newsletter Bar */
+  .newsletter-bar{background:var(--brand-green); padding:24px 0; border-bottom:1px solid rgba(255,255,255,0.1);}
+  .newsletter-inner{display:flex; justify-content:space-between; align-items:center; gap:24px; max-width:1280px; margin:0 auto; padding:0 24px; flex-wrap:wrap;}
+  .newsletter-text{display:flex; align-items:center; gap:16px; color:#fff;}
+  .newsletter-text svg{width:32px; height:32px; stroke-width:1.2;}
+  .newsletter-text h4{font-family:'Inter', sans-serif; font-size:1rem; font-weight:600; margin:0 0 4px;}
+  .newsletter-text p{color:#a8b8a3; font-size:0.8rem; margin:0;}
+  .newsletter-form{display:flex; width:100%; max-width:400px; height:44px;}
+  .newsletter-form input{flex:1; padding:0 16px; border:none; border-radius:4px 0 0 4px; font-size:0.9rem; outline:none;}
+  .newsletter-form button{background:var(--brand-gold); color:#fff; padding:0 24px; font-weight:500; border-radius:0 4px 4px 0; cursor:pointer; transition:background 0.2s;}
+  .newsletter-form button:hover{background:var(--brand-gold-hover);}
+
   /* Footer */
-  footer{background:var(--brand-green); color:#fff; padding-top:60px;}
-  .footer-top{display:grid; grid-template-columns:1.5fr 1fr 1fr 1fr; gap:40px; max-width:1280px; margin:0 auto; padding:0 24px 40px;}
+  footer{background:var(--brand-green); color:#fff; padding-top:40px;}
+  .footer-top{display:grid; grid-template-columns:1.5fr 1fr 1fr 1fr; gap:40px; max-width:1280px; margin:0 auto; padding:0 24px 40px; align-items:start;}
   .footer-brand p{color:#a8b8a3; font-size:0.85rem; margin-top:16px; max-width:250px;}
   .footer-col h4{font-family:'Inter', sans-serif; font-size:0.85rem; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:16px; color:var(--brand-gold);}
   .footer-col a{display:block; font-size:0.85rem; color:#d1ded0; margin-bottom:10px; transition:color 0.2s;}
   .footer-col a:hover{color:#fff;}
+  
+  .payment-icons{display:flex; gap:8px; margin-top:16px;}
+  .payment-icons span{background:#fff; color:var(--brand-green); font-size:0.6rem; font-weight:700; padding:4px 8px; border-radius:2px;}
+  
   .footer-bottom{border-top:1px solid rgba(255,255,255,0.1); padding:20px 24px; max-width:1280px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; font-size:0.75rem; color:#a8b8a3; flex-wrap:wrap; gap:16px;}
   
   /* Secret Admin Link */
@@ -156,7 +174,7 @@
   .social-icons svg{width:18px; height:18px;}
 
   /* Cart Drawer & Modal & Toast */
-  .overlay{position:fixed; inset:0; background:rgba(26,58,40,0.5); z-index:90; opacity:0; pointer-events:none; transition:opacity 0.3s;}
+  .overlay{position:fixed; inset:0; background:rgba(11,59,36,0.5); z-index:90; opacity:0; pointer-events:none; transition:opacity 0.3s;}
   .overlay.open{opacity:1; pointer-events:auto;}
   .cart-drawer{position:fixed; top:0; right:0; height:100%; width:min(400px,100vw); background:var(--bg-main); z-index:95; transform:translateX(100%); transition:transform 0.3s ease; display:flex; flex-direction:column;}
   .overlay.open .cart-drawer{transform:translateX(0);}
@@ -183,7 +201,7 @@
   .toast{position:fixed; bottom:30px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--brand-green); color:#fff; padding:12px 24px; border-radius:var(--radius-pill); font-size:0.9rem; display:flex; align-items:center; gap:10px; box-shadow:0 10px 30px rgba(0,0,0,0.2); z-index:110; opacity:0; pointer-events:none; transition:all 0.3s;}
   .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
 
-  .modal-overlay{position:fixed; inset:0; background:rgba(26,58,40,0.6); z-index:100; display:flex; align-items:center; justify-content:center; padding:24px; opacity:0; pointer-events:none; transition:opacity 0.3s;}
+  .modal-overlay{position:fixed; inset:0; background:rgba(11,59,36,0.6); z-index:100; display:flex; align-items:center; justify-content:center; padding:24px; opacity:0; pointer-events:none; transition:opacity 0.3s;}
   .modal-overlay.open{opacity:1; pointer-events:auto;}
   .modal-box{background:var(--bg-main); border-radius:8px; max-width:500px; width:100%; padding:40px; transform:scale(0.95); transition:transform 0.3s; max-height:85vh; overflow-y:auto;}
   .modal-overlay.open .modal-box{transform:scale(1);}
@@ -213,11 +231,14 @@
 <div class="top-bar">
   <div class="wrap">
     <div class="top-bar-links">
-      <span>Pure Herbs</span>
-      <span>Natural Oils</span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22C6.5 22 2 17.5 2 12S6.5 2 12 2s10 4.5 10 10-4.5 10-10 10z"/><path d="M12 6v6l4 2"/></svg> Pure Herbs</span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg> Natural Oils</span>
       <span>Herbaceous Delights</span>
     </div>
-    <div>Free delivery on all orders</div>
+    <div style="display:flex; align-items:center; gap:8px;">
+      <svg style="width:14px; height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+      Free delivery within Nairobi for orders above KSh 2,000
+    </div>
   </div>
 </div>
 
@@ -237,6 +258,7 @@
     </nav>
     <div class="header-actions">
       <button class="icon-btn" id="searchToggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button>
+      <button class="icon-btn" aria-label="Account"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
       <button class="icon-btn" id="cartToggle">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
         <span class="cart-count" id="cartCount" style="display:none;">0</span>
@@ -299,7 +321,7 @@
     </div>
     <div class="trust-item">
       <div class="trust-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div>
-      <div class="trust-text"><h4>Fast Delivery</h4><p>Straight to your door</p></div>
+      <div class="trust-text"><h4>Fast Delivery</h4><p>Within Nairobi (and beyond)</p></div>
     </div>
     <div class="trust-item">
       <div class="trust-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
@@ -323,44 +345,60 @@
   </div>
 </section>
 
+<div class="newsletter-bar">
+  <div class="newsletter-inner">
+    <div class="newsletter-text">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg>
+      <div>
+        <h4>Join Our Newsletter</h4>
+        <p>Get exclusive offers, natural wellness tips and more.</p>
+      </div>
+    </div>
+    <form class="newsletter-form" onsubmit="event.preventDefault(); alert('Subscribed!'); this.reset();">
+      <input type="email" placeholder="Enter your email address" required>
+      <button type="submit">Subscribe</button>
+    </form>
+  </div>
+</div>
+
 <footer id="contact">
   <div class="footer-top">
     <div class="footer-brand">
       <a href="#home" class="logo">
         <img src="logo.jpg" alt="Betti Naturals" class="footer-logo-img">
       </a>
-      <p>Bringing you natural care, wellness, and beauty, straight from the earth.</p>
     </div>
     <div class="footer-col">
-      <h4>Shop</h4>
-      <a href="#" data-scroll-shop="all">All Products</a>
-      <a href="#" data-scroll-shop="oils">Essential Oils</a>
-      <a href="#" data-scroll-shop="powders">Herbs & Powders</a>
-      <a href="#" data-scroll-shop="teas">Herbal Teas</a>
+      <h4>Links</h4>
+      <a href="#home">Home</a>
+      <a href="#" data-scroll-shop="all">Shop</a>
+      <a href="#about">About</a>
+      <a href="#">Blog</a>
+      <a href="#contact">Contact</a>
     </div>
     <div class="footer-col">
       <h4>Company</h4>
       <a href="#about">About Us</a>
-      <a href="#">Blog</a>
-      <a href="#">Contact</a>
       <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
     </div>
     <div class="footer-col">
-      <h4>Contact</h4>
-      <a href="#">hello@bettinaturals.com</a>
-      <a href="#">+254 711 778 233</a>
+      <h4>We accept</h4>
+      <div class="payment-icons">
+        <span style="color:#4CAF50;">M-PESA</span>
+        <span style="color:#1A1F71;">VISA</span>
+        <span style="color:#EB001B;">Mastercard</span>
+      </div>
     </div>
   </div>
   <div class="footer-bottom">
     <div>
       &copy; <span id="year"></span> Betti Naturals. All rights reserved. 
-      <!-- Hidden Owner Access Link -->
       <a href="/admin/" class="secret-admin" title="Owner Dashboard">&bull;</a>
     </div>
     <div style="display:flex; align-items:center; gap:24px; flex-wrap:wrap; justify-content:center;">
       <div style="font-size:0.75rem; color:#a8b8a3;">
-        Developed by <strong style="color:#fff; font-weight:600;">IDYLLIC TECHNOLOGIES</strong><br>
-        Tel: <strong style="color:#fff; font-weight:600;">0748220487</strong>
+        Developed by <strong style="color:#fff; font-weight:600;">IDYLLIC TECHNOLOGIES</strong> &bull; Tel: <strong style="color:#fff; font-weight:600;">0748220487</strong>
       </div>
       <div class="social-icons">
         <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
@@ -413,7 +451,7 @@ const CATEGORIES = [
   {id:"teas", label:"Herbal Blends", icon:"tea"},
   {id:"nuts", label:"Carrier Oils", icon:"bottle"},
   {id:"teas", label:"Herbal Teas", icon:"tea"},
-  {id:"oils", label:"Natural Skin Oils", icon:"flower"}
+  {id:"oils", label:"Natural Hair & Skin Oils", icon:"flower"}
 ];
 
 const BASE_PRODUCTS = [
