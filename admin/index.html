@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
-<title>Betti Naturals  Admin tools</title>
+<title>Betti Naturals — Owner tools</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500;1,9..144,600&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -74,6 +74,7 @@
   .admin-clear{padding:8px 14px; border-radius:var(--radius-pill); border:1px solid var(--line); color:var(--ink-soft); font-size:0.8rem; font-weight:600;}
   .admin-clear:hover{border-color:#B4472F; color:#B4472F; background:var(--clay-light);}
   .admin-error{font-size:0.76rem; color:#B4472F; margin-top:6px;}
+  .price-input{padding: 6px 10px; border-radius: 8px; border: 1px solid var(--line); font-size: 0.85rem; width: 100%; max-width: 120px; font-family: inherit;}
 
   .settings-card{background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:24px; margin-bottom:24px;}
   .settings-card h2{font-size:1.15rem; margin-bottom:6px;}
@@ -125,8 +126,8 @@
   </div>
 
   <div class="admin-head">
-    <h1>Product photos</h1>
-    <p>Upload a photo for each product. Changes save to the server and appear on the storefront for every visitor.</p>
+    <h1>Product photos &amp; prices</h1>
+    <p>Upload a photo or change the price for each product. Changes save to the server instantly.</p>
   </div>
 
   <div class="admin-fatal" id="fileWarning">
@@ -135,7 +136,7 @@
   </div>
 
   <div class="admin-note">
-    <strong>Live storage:</strong> photos are saved to the server's <code>uploads/</code> folder and the mapping to <code>data/photos.json</code>. Supported formats: JPG, PNG, WebP, GIF, AVIF. Max 3 MB.
+    <strong>Live storage:</strong> photos and prices are saved to the server and backed up to Cloudinary so they survive restarts.
   </div>
 
   <div class="admin-actions-bar">
@@ -165,11 +166,11 @@
           </div>
           <div class="field">
             <label for="newPassword">New password</label>
-            <input type="password" id="newPassword" required minlength="8" autocomplete="new-password">
+            <input type="password" id="newPassword" required minlength="4" autocomplete="new-password">
           </div>
           <div class="field">
             <label for="confirmPassword">Confirm new password</label>
-            <input type="password" id="confirmPassword" required minlength="8" autocomplete="new-password">
+            <input type="password" id="confirmPassword" required minlength="4" autocomplete="new-password">
           </div>
         </div>
         <div class="form-actions">
@@ -193,20 +194,13 @@ if(IS_FILE_PROTOCOL){
 }
 
 document.getElementById("viewStorefrontBtn").addEventListener("click", () => {
-  if(IS_FILE_PROTOCOL){
-    showToast("Start the server, then open http://localhost:3000/admin/", true);
-    return;
-  }
+  if(IS_FILE_PROTOCOL){ showToast("Start the server first", true); return; }
   window.location.href = window.location.origin + "/";
 });
 
 document.getElementById("logoutBtn").addEventListener("click", () => {
-  fetch("/admin/", {
-    headers: { "Authorization": "Basic " + btoa("logout:logout") },
-    cache: "no-store"
-  }).finally(() => {
-    window.location.href = "/";
-  });
+  fetch("/admin/", { headers: { "Authorization": "Basic " + btoa("logout:logout") }, cache: "no-store" })
+    .finally(() => { window.location.href = "/"; });
 });
 
 const ICONS = {
@@ -226,33 +220,34 @@ const CATEGORIES = [
 ];
 
 const PRODUCTS = [
-  {id:1,  name:"Castor Oil",        cat:"oils",    size:"100ml", icon:"bottle"},
-  {id:2,  name:"Black Seed Oil",    cat:"oils",    size:"100ml", icon:"bottle"},
-  {id:3,  name:"Flax Seed Oil",     cat:"oils",    size:"100ml", icon:"bottle"},
-  {id:4,  name:"Coconut Oil",       cat:"oils",    size:"250ml", icon:"bottle"},
-  {id:5,  name:"Olive Oil",         cat:"oils",    size:"250ml", icon:"bottle"},
-  {id:6,  name:"Sweet Almond Oil",  cat:"oils",    size:"100ml", icon:"bottle"},
-  {id:7,  name:"Argan Oil",         cat:"oils",    size:"50ml",  icon:"bottle"},
-  {id:8,  name:"Moringa Powder",    cat:"powders", size:"100g",  icon:"powder"},
-  {id:9,  name:"Red Maca",          cat:"powders", size:"100g",  icon:"powder"},
-  {id:10, name:"Black Maca",        cat:"powders", size:"100g",  icon:"powder"},
-  {id:11, name:"Hibiscus Powder",   cat:"powders", size:"100g",  icon:"powder"},
-  {id:12, name:"Cloves",            cat:"powders", size:"100g",  icon:"leafSprig"},
-  {id:13, name:"Purple Tea",        cat:"teas",    size:"50g",   icon:"tea"},
-  {id:14, name:"Green Tea",         cat:"teas",    size:"50g",   icon:"tea"},
-  {id:15, name:"Hibiscus Flowers",  cat:"teas",    size:"50g",   icon:"tea"},
-  {id:16, name:"Sunflower Seeds",   cat:"nuts",    size:"200g",  icon:"nuts"},
-  {id:17, name:"Pumpkin Seeds",     cat:"nuts",    size:"200g",  icon:"nuts"},
-  {id:18, name:"Walnuts",           cat:"nuts",    size:"250g",  icon:"nuts"},
-  {id:19, name:"Almonds",           cat:"nuts",    size:"250g",  icon:"nuts"},
-  {id:20, name:"Cashew Nuts",       cat:"nuts",    size:"250g",  icon:"nuts"},
-  {id:21, name:"Granola",           cat:"nuts",    size:"400g",  icon:"nuts"}
+  {id:1,  name:"Castor Oil",        cat:"oils",    size:"100ml", price:450, icon:"bottle"},
+  {id:2,  name:"Black Seed Oil",    cat:"oils",    size:"100ml", price:700, icon:"bottle"},
+  {id:3,  name:"Flax Seed Oil",     cat:"oils",    size:"100ml", price:650, icon:"bottle"},
+  {id:4,  name:"Coconut Oil",       cat:"oils",    size:"250ml", price:500, icon:"bottle"},
+  {id:5,  name:"Olive Oil",         cat:"oils",    size:"250ml", price:800, icon:"bottle"},
+  {id:6,  name:"Sweet Almond Oil",  cat:"oils",    size:"100ml", price:600, icon:"bottle"},
+  {id:7,  name:"Argan Oil",         cat:"oils",    size:"50ml",  price:900, icon:"bottle"},
+  {id:8,  name:"Moringa Powder",    cat:"powders", size:"100g",  price:350, icon:"powder"},
+  {id:9,  name:"Red Maca",          cat:"powders", size:"100g",  price:600, icon:"powder"},
+  {id:10, name:"Black Maca",        cat:"powders", size:"100g",  price:650, icon:"powder"},
+  {id:11, name:"Hibiscus Powder",   cat:"powders", size:"100g",  price:320, icon:"powder"},
+  {id:12, name:"Cloves",            cat:"powders", size:"100g",  price:280, icon:"leafSprig"},
+  {id:13, name:"Purple Tea",        cat:"teas",    size:"50g",   price:350, icon:"tea"},
+  {id:14, name:"Green Tea",         cat:"teas",    size:"50g",   price:300, icon:"tea"},
+  {id:15, name:"Hibiscus Flowers",  cat:"teas",    size:"50g",   price:250, icon:"tea"},
+  {id:16, name:"Sunflower Seeds",   cat:"nuts",    size:"200g",  price:300, icon:"nuts"},
+  {id:17, name:"Pumpkin Seeds",     cat:"nuts",    size:"200g",  price:360, icon:"nuts"},
+  {id:18, name:"Walnuts",           cat:"nuts",    size:"250g",  price:700, icon:"nuts"},
+  {id:19, name:"Almonds",           cat:"nuts",    size:"250g",  price:650, icon:"nuts"},
+  {id:20, name:"Cashew Nuts",       cat:"nuts",    size:"250g",  price:750, icon:"nuts"},
+  {id:21, name:"Granola",           cat:"nuts",    size:"400g",  price:500, icon:"nuts"}
 ];
 
 const catLabel = id => (CATEGORIES.find(c => c.id === id) || {}).label || id;
 const catTint = id => ["powders","nuts"].includes(id) ? "var(--sage-light)" : "var(--clay-light)";
 
 let photos = {};
+let prices = {};
 const adminGrid = document.getElementById("adminGrid");
 
 function renderAdmin(){
@@ -266,6 +261,12 @@ function renderAdmin(){
       <div class="admin-info">
         <div class="admin-name">${p.name}</div>
         <div class="admin-meta">${catLabel(p.cat)} · ${p.size}</div>
+        
+        <div class="field" style="margin-bottom: 8px;">
+          <label style="font-size:0.75rem; color:var(--ink-soft);">Price (KSh)</label>
+          <input type="number" class="price-input" data-price="${p.id}" value="${prices[p.id] || p.price}" min="1" ${disabled}>
+        </div>
+
         <div class="admin-actions">
           <label class="${IS_FILE_PROTOCOL ? 'disabled' : ''}">
             ${ICONS.upload}
@@ -281,6 +282,31 @@ function renderAdmin(){
 
   if(IS_FILE_PROTOCOL) return;
 
+  adminGrid.querySelectorAll("input[data-price]").forEach(input => {
+    input.addEventListener("change", async e => {
+      const id = e.target.dataset.price;
+      const val = Number(e.target.value);
+      if(!val || val < 1) return;
+      
+      e.target.style.opacity = "0.5";
+      try {
+        const res = await fetch("/api/prices", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "same-origin",
+          body: JSON.stringify({ [id]: val })
+        });
+        if(!res.ok) throw new Error("Failed to save");
+        prices[id] = val;
+        showToast(`Price updated to KSh ${val}`);
+      } catch(err){
+        showToast("Could not save price", true);
+      } finally {
+        e.target.style.opacity = "1";
+      }
+    });
+  });
+
   adminGrid.querySelectorAll("input[data-upload]").forEach(input => {
     input.addEventListener("change", async e => {
       const file = e.target.files && e.target.files[0];
@@ -290,14 +316,8 @@ function renderAdmin(){
       const errEl = adminGrid.querySelector(`[data-error="${id}"]`);
       errEl.textContent = "";
 
-      if(!file.type.startsWith("image/")){
-        errEl.textContent = "That file isn't an image.";
-        return;
-      }
-      if(file.size > 3 * 1024 * 1024){
-        errEl.textContent = "Image is over 3 MB.";
-        return;
-      }
+      if(!file.type.startsWith("image/")){ errEl.textContent = "Not an image."; return; }
+      if(file.size > 3 * 1024 * 1024){ errEl.textContent = "Over 3 MB."; return; }
 
       const fd = new FormData();
       fd.append("photo", file);
@@ -306,18 +326,14 @@ function renderAdmin(){
       label.innerHTML = "Uploading…";
 
       try {
-        const res = await fetch(`/api/upload/${id}`, {
-          method: "POST",
-          body: fd,
-          credentials: "same-origin"
-        });
+        const res = await fetch(`/api/upload/${id}`, { method: "POST", body: fd, credentials: "same-origin" });
         if(!res.ok){
           const data = await res.json().catch(()=>({error:`Upload failed (${res.status})`}));
-          throw new Error(data.error || `Upload failed (${res.status})`);
+          throw new Error(data.error || `Failed`);
         }
         const data = await res.json();
         photos[id] = data.url;
-        showToast("Photo saved on server");
+        showToast("Photo saved");
         renderAdmin();
       } catch(err){
         label.classList.remove("uploading");
@@ -331,18 +347,12 @@ function renderAdmin(){
   adminGrid.querySelectorAll("[data-clear]").forEach(btn => {
     btn.addEventListener("click", async () => {
       const id = Number(btn.dataset.clear);
-      if(!confirm("Remove this product photo from the server?")) return;
+      if(!confirm("Remove this product photo?")) return;
       const errEl = adminGrid.querySelector(`[data-error="${id}"]`);
       errEl.textContent = "";
       try {
-        const res = await fetch(`/api/upload/${id}`, {
-          method: "DELETE",
-          credentials: "same-origin"
-        });
-        if(!res.ok && res.status !== 404){
-          const data = await res.json().catch(()=>({error:`Delete failed (${res.status})`}));
-          throw new Error(data.error || `Delete failed (${res.status})`);
-        }
+        const res = await fetch(`/api/upload/${id}`, { method: "DELETE", credentials: "same-origin" });
+        if(!res.ok && res.status !== 404) throw new Error(`Delete failed`);
         delete photos[id];
         showToast("Photo removed");
         renderAdmin();
@@ -355,19 +365,16 @@ function renderAdmin(){
 }
 
 async function loadFromServer(){
-  if(IS_FILE_PROTOCOL){
-    renderAdmin();
-    return;
-  }
+  if(IS_FILE_PROTOCOL){ renderAdmin(); return; }
   try {
-    const res = await fetch("/api/photos", { cache: "no-store", credentials: "same-origin" });
-    if(!res.ok){
-      throw new Error(`Server returned ${res.status}`);
-    }
-    const data = await res.json();
-    photos = data && typeof data === "object" ? data : {};
+    const [photosRes, pricesRes] = await Promise.all([
+      fetch("/api/photos", { cache: "no-store", credentials: "same-origin" }),
+      fetch("/api/prices", { cache: "no-store", credentials: "same-origin" })
+    ]);
+    if(photosRes.ok) photos = await photosRes.json();
+    if(pricesRes.ok) prices = await pricesRes.json();
   } catch(e){
-    showToast("Couldn't reach server — is it running?", true);
+    showToast("Couldn't reach server", true);
   }
   renderAdmin();
 }
@@ -378,8 +385,7 @@ const changeCredsForm = document.getElementById("changeCredsForm");
 changeCredsForm.addEventListener("submit", async (e) => {
   e.preventDefault();
   const msg = document.getElementById("credsMsg");
-  msg.className = "form-msg";
-  msg.textContent = "";
+  msg.className = "form-msg"; msg.textContent = "";
 
   const currentPassword = document.getElementById("currentPassword").value;
   const newUsername = document.getElementById("newUsername").value.trim();
@@ -387,14 +393,11 @@ changeCredsForm.addEventListener("submit", async (e) => {
   const confirmPassword = document.getElementById("confirmPassword").value;
 
   if(newPassword !== confirmPassword){
-    msg.classList.add("err");
-    msg.textContent = "New password and confirmation do not match.";
-    return;
+    msg.classList.add("err"); msg.textContent = "Passwords do not match."; return;
   }
 
   const btn = document.getElementById("saveCredsBtn");
-  btn.disabled = true;
-  btn.textContent = "Saving…";
+  btn.disabled = true; btn.textContent = "Saving…";
 
   try {
     const res = await fetch("/api/credentials", {
@@ -404,23 +407,18 @@ changeCredsForm.addEventListener("submit", async (e) => {
       body: JSON.stringify({ currentPassword, newUsername, newPassword })
     });
     const data = await res.json().catch(()=>({}));
-    if(!res.ok){
-      throw new Error(data.error || `Save failed (${res.status})`);
-    }
+    if(!res.ok) throw new Error(data.error || `Save failed`);
+    
     msg.classList.add("ok");
-    msg.textContent = `Saved. New username: ${data.username}. You'll be asked to sign in again on the next request.`;
+    msg.textContent = `Saved. New username: ${data.username}.`;
     changeCredsForm.reset();
     showToast("Credentials updated");
-    setTimeout(() => {
-      window.location.reload();
-    }, 1500);
+    setTimeout(() => { window.location.reload(); }, 1500);
   } catch(err){
-    msg.classList.add("err");
-    msg.textContent = err.message || "Save failed";
+    msg.classList.add("err"); msg.textContent = err.message || "Save failed";
     showToast(err.message || "Save failed", true);
   } finally {
-    btn.disabled = false;
-    btn.textContent = "Save changes";
+    btn.disabled = false; btn.textContent = "Save changes";
   }
 });
 
