@@ -91,7 +91,6 @@
 
   <div class="admin-grid" id="adminGrid"></div>
 
-  <!-- Add Product Section -->
   <div class="settings-card">
     <h2>Add New Product</h2>
     <p>Post a product that is currently not in the catalogue. It will appear on the storefront immediately.</p>
@@ -206,26 +205,26 @@ const catLabel = id => (CATEGORIES.find(c => c.id === id) || {}).label || id;
 let photos = {};
 let prices = {};
 let customProducts = [];
+let deletedProducts = [];
 const adminGrid = document.getElementById("adminGrid");
 
 function getAllProducts() {
-  return [...BASE_PRODUCTS, ...customProducts];
+  // Combine base and custom, then filter out any that are marked as deleted
+  const combined = [...BASE_PRODUCTS, ...customProducts];
+  return combined.filter(p => !deletedProducts.includes(p.id));
 }
 
 function renderAdmin(){
   const allProducts = getAllProducts();
   
   adminGrid.innerHTML = allProducts.map(p => {
-    // Only allow deleting products that are in the custom list (id > 1000000000000)
-    const isCustom = p.id > 1000000000000;
-    
     return `
     <div class="admin-card">
       <div class="admin-thumb">
         ${photos[p.id] ? `<img src="${photos[p.id]}" alt="${p.name}">` : (ICONS[p.icon] || ICONS.leaf)}
       </div>
       <div class="admin-info">
-        <div class="admin-name">${p.name} ${isCustom ? '<span style="font-size:0.65rem; color:var(--brand-gold); background:#fdfaf2; padding:2px 4px; border-radius:2px; margin-left:4px;">NEW</span>' : ''}</div>
+        <div class="admin-name">${p.name}</div>
         <div class="admin-meta">${catLabel(p.cat)} · ${p.size || 'N/A'}</div>
         
         <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
@@ -239,7 +238,7 @@ function renderAdmin(){
             <input type="file" accept="image/*" data-upload="${p.id}">
           </label>
           ${photos[p.id] ? `<button style="font-size:0.75rem; color:#b4472f; text-decoration:underline;" data-clear-photo="${p.id}">Remove Photo</button>` : ""}
-          ${isCustom ? `<button style="font-size:0.75rem; background:#b4472f; color:#fff; padding:6px 12px; border-radius:var(--radius);" data-delete-product="${p.id}">Delete Product</button>` : ""}
+          <button style="font-size:0.75rem; background:#b4472f; color:#fff; padding:6px 12px; border-radius:var(--radius);" data-delete-product="${p.id}">Delete Product</button>
         </div>
       </div>
     </div>
@@ -307,8 +306,12 @@ function renderAdmin(){
       try {
         const res = await fetch(`/api/products/${id}`, { method: "DELETE", credentials: "same-origin" });
         if(!res.ok) throw new Error("Delete failed");
+        
+        // Remove from local memory so it disappears instantly without a full reload
+        deletedProducts.push(id);
         customProducts = customProducts.filter(p => p.id !== id);
         delete photos[id];
+        
         showToast("Product deleted");
         renderAdmin();
       } catch(err){ showToast("Delete failed", true); }
@@ -319,14 +322,16 @@ function renderAdmin(){
 async function loadFromServer(){
   if(IS_FILE_PROTOCOL){ renderAdmin(); return; }
   try {
-    const [photosRes, pricesRes, productsRes] = await Promise.all([
+    const [photosRes, pricesRes, productsRes, deletedRes] = await Promise.all([
       fetch("/api/photos", { cache: "no-store", credentials: "same-origin" }),
       fetch("/api/prices", { cache: "no-store", credentials: "same-origin" }),
-      fetch("/api/products", { cache: "no-store", credentials: "same-origin" })
+      fetch("/api/products", { cache: "no-store", credentials: "same-origin" }),
+      fetch("/api/deleted", { cache: "no-store", credentials: "same-origin" })
     ]);
     if(photosRes.ok) photos = await photosRes.json();
     if(pricesRes.ok) prices = await pricesRes.json();
     if(productsRes.ok) customProducts = await productsRes.json();
+    if(deletedRes.ok) deletedProducts = await deletedRes.json();
   } catch(e){ showToast("Couldn't reach server", true); }
   renderAdmin();
 }

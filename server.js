@@ -30,14 +30,17 @@ const PHOTOS_FILE    = path.join(DATA_DIR, "photos.json");
 const AUTH_FILE      = path.join(DATA_DIR, "auth.json");
 const PRICES_FILE    = path.join(DATA_DIR, "prices.json");
 const PRODUCTS_FILE  = path.join(DATA_DIR, "custom_products.json");
+const DELETED_FILE   = path.join(DATA_DIR, "deleted_products.json");
 const CLOUD_AUTH_ID  = "herbal-haven/_auth/credentials";
 const CLOUD_PRICES_ID = "herbal-haven/_auth/prices";
 const CLOUD_PROD_ID  = "herbal-haven/_auth/custom_products";
+const CLOUD_DELETED_ID = "herbal-haven/_auth/deleted_products";
 
 fs.mkdirSync(DATA_DIR, { recursive: true });
 if(!fs.existsSync(PHOTOS_FILE)) fs.writeFileSync(PHOTOS_FILE, "{}");
 if(!fs.existsSync(PRICES_FILE)) fs.writeFileSync(PRICES_FILE, "{}");
 if(!fs.existsSync(PRODUCTS_FILE)) fs.writeFileSync(PRODUCTS_FILE, "[]");
+if(!fs.existsSync(DELETED_FILE)) fs.writeFileSync(DELETED_FILE, "[]");
 
 const app = express();
 app.use(express.json({ limit: "32kb" }));
@@ -133,6 +136,7 @@ function writeJSON(file, data){ fs.writeFileSync(file, JSON.stringify(data, null
 app.get("/api/photos", (_req, res) => { res.set("Cache-Control", "no-store"); res.json(readJSON(PHOTOS_FILE, {})); });
 app.get("/api/prices", (_req, res) => { res.set("Cache-Control", "no-store"); res.json(readJSON(PRICES_FILE, {})); });
 app.get("/api/products", (_req, res) => { res.set("Cache-Control", "no-store"); res.json(readJSON(PRODUCTS_FILE, [])); });
+app.get("/api/deleted", (_req, res) => { res.set("Cache-Control", "no-store"); res.json(readJSON(DELETED_FILE, [])); });
 
 app.post("/api/prices", basicAuth, async (req, res) => {
   const updates = req.body;
@@ -161,22 +165,28 @@ app.post("/api/products", basicAuth, async (req, res) => {
   res.json({ ok: true, product: newProduct });
 });
 
-// DELETE a custom product
+// DELETE a product (works for both base and custom products)
 app.delete("/api/products/:id", basicAuth, async (req, res) => {
   const id = Number(req.params.id);
-  let products = readJSON(PRODUCTS_FILE, []);
   
+  // 1. If it's a custom product, remove it from the custom list
+  let products = readJSON(PRODUCTS_FILE, []);
   const initialLength = products.length;
   products = products.filter(p => p.id !== id);
-  
-  if (products.length === initialLength) {
-    return res.status(404).json({ error: "Product not found in custom list" });
+  if (products.length !== initialLength) {
+    writeJSON(PRODUCTS_FILE, products);
+    await pushToCloudinary(products, "custom_products");
   }
 
-  writeJSON(PRODUCTS_FILE, products);
-  await pushToCloudinary(products, "custom_products");
-  
-  // Also delete its photo if it exists
+  // 2. Add its ID to the global deleted list (this hides base products)
+  let deleted = readJSON(DELETED_FILE, []);
+  if (!deleted.includes(id)) {
+    deleted.push(id);
+    writeJSON(DELETED_FILE, deleted);
+    await pushToCloudinary(deleted, "deleted_products");
+  }
+
+  // 3. Delete its photo if it exists
   try {
     await cloudinary.uploader.destroy(`herbal-haven/product-${id}`);
     const photos = readJSON(PHOTOS_FILE, {});
@@ -249,6 +259,9 @@ async function rebuildFromCloudinary(){
 
   const products = await pullFromCloudinary(CLOUD_PROD_ID);
   if(products) writeJSON(PRODUCTS_FILE, products);
+
+  const deleted = await pullFromCloudinary(CLOUD_DELETED_ID);
+  if(deleted) writeJSON(DELETED_FILE, deleted);
 }
 
 app.get("*", (req, res) => {

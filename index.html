@@ -44,7 +44,6 @@
   header{background:var(--brand-green); position:sticky; top:0; z-index:60;}
   .header-inner{display:flex; align-items:center; justify-content:space-between; padding:16px 24px; max-width:1280px; margin:0 auto; gap:24px;}
   
-  /* Logo stays in a white box so it pops against the dark green */
   .logo{background:#fff; padding:8px 16px; border-radius:4px; display:flex; align-items:center; justify-content:center;}
   .logo-img{height:50px; width:auto; object-fit:contain;}
   .footer-logo-img{height:70px; width:auto; object-fit:contain; margin-bottom:16px;}
@@ -216,8 +215,6 @@
 </style>
 </head>
 <body>
-
-<!-- Top Bar Removed -->
 
 <header>
   <div class="header-inner">
@@ -444,6 +441,7 @@ const catLabel = id => (CATEGORIES.find(c => c.id === id) || {}).label || id;
 let photos = {};
 let prices = {};
 let customProducts = [];
+let deletedProducts = [];
 let cart = {};
 let currentCat = "all";
 let currentSearch = "";
@@ -474,7 +472,9 @@ catGrid.querySelectorAll("[data-goto-cat]").forEach(el => {
 });
 
 function getAllProducts() {
-  return [...BASE_PRODUCTS, ...customProducts];
+  // Combine base and custom, then filter out any that are marked as deleted
+  const combined = [...BASE_PRODUCTS, ...customProducts];
+  return combined.filter(p => !deletedProducts.includes(p.id));
 }
 
 function photoMarkup(p){
@@ -550,14 +550,16 @@ function renderShop(){
 
 async function loadPhotosFromServer(){
   try {
-    const [photosRes, pricesRes, productsRes] = await Promise.all([
+    const [photosRes, pricesRes, productsRes, deletedRes] = await Promise.all([
       fetch("/api/photos", { cache: "no-store" }),
       fetch("/api/prices", { cache: "no-store" }),
-      fetch("/api/products", { cache: "no-store" })
+      fetch("/api/products", { cache: "no-store" }),
+      fetch("/api/deleted", { cache: "no-store" })
     ]);
     if(photosRes.ok) photos = await photosRes.json();
     if(pricesRes.ok) prices = await pricesRes.json();
     if(productsRes.ok) customProducts = await productsRes.json();
+    if(deletedRes.ok) deletedProducts = await deletedRes.json();
   } catch(e){ /* offline */ }
   renderFeatured();
   renderShop();
