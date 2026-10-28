@@ -40,13 +40,6 @@
   section{padding:80px 0;}
   .icon{width:20px; height:20px; flex-shrink:0;}
   
-  /* Top Bar */
-  .top-bar{background:var(--brand-green); color:#fff; font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em; padding:8px 0;}
-  .top-bar .wrap{display:flex; justify-content:center; align-items:center;}
-  .top-bar-links{display:flex; gap:16px; align-items:center;}
-  .top-bar-links svg{width:14px; height:14px;}
-  .top-bar-links span:not(:last-child)::after{content:"|"; margin-left:16px; opacity:0.3;}
-  
   /* Header */
   header{background:var(--bg-main); border-bottom:1px solid var(--border-color); position:sticky; top:0; z-index:60;}
   .header-inner{display:flex; align-items:center; justify-content:space-between; padding:16px 24px; max-width:1280px; margin:0 auto; gap:24px;}
@@ -66,6 +59,14 @@
   .icon-btn:hover{opacity:0.7;}
   .icon-btn svg{width:22px; height:22px; stroke-width:1.5;}
   .cart-count{position:absolute; top:-4px; right:-8px; background:var(--brand-gold); color:#fff; font-size:0.65rem; font-weight:700; min-width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center; padding:0 3px;}
+
+  /* Mobile Menu */
+  .menu-toggle{display:none;}
+  .mobile-nav{position:fixed; inset:0; background:rgba(11,59,36,0.95); z-index:80; opacity:0; pointer-events:none; transition:opacity 0.3s ease; display:flex; flex-direction:column; justify-content:center; align-items:center;}
+  .mobile-nav.open{opacity:1; pointer-events:auto;}
+  .mobile-nav a{color:#fff; font-size:1.5rem; font-family:'Playfair Display', serif; margin-bottom:24px; cursor:pointer;}
+  .mobile-nav a:hover{color:var(--brand-gold);}
+  .mobile-close{position:absolute; top:24px; right:24px; color:#fff; width:40px; height:40px;}
 
   /* Buttons */
   .btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:12px 24px; border-radius:var(--radius-pill); font-weight:500; font-size:0.9rem; transition:all 0.2s ease; cursor:pointer;}
@@ -199,7 +200,8 @@
     .footer-top{grid-template-columns:repeat(2,1fr);}
   }
   @media (max-width:768px){
-    nav.main-nav, .top-bar-links{display:none;}
+    nav.main-nav{display:none;}
+    .menu-toggle{display:block;}
     .hero{padding:60px 0; text-align:center;}
     .hero-content{margin:0 auto;}
     .hero p{margin:0 auto 30px;}
@@ -211,16 +213,6 @@
 </style>
 </head>
 <body>
-
-<div class="top-bar">
-  <div class="wrap">
-    <div class="top-bar-links">
-      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22C6.5 22 2 17.5 2 12S6.5 2 12 2s10 4.5 10 10-4.5 10-10 10z"/><path d="M12 6v6l4 2"/></svg> Pure Herbs</span>
-      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg> Natural Oils</span>
-      <span>Herbaceous Delights</span>
-    </div>
-  </div>
-</div>
 
 <header>
   <div class="header-inner">
@@ -242,9 +234,21 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
         <span class="cart-count" id="cartCount" style="display:none;">0</span>
       </button>
+      <button class="icon-btn menu-toggle" id="menuToggle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
     </div>
   </div>
 </header>
+
+<div class="mobile-nav" id="mobileNav">
+  <button class="mobile-close" id="mobileClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  <a href="#home" data-nav data-close>Home</a>
+  <a href="#" data-nav data-scroll-shop="all" data-close>Shop</a>
+  <a href="#about" data-nav data-close>About</a>
+  <a href="#" data-nav data-close>Blog</a>
+  <a href="#contact" data-nav data-close>Contact</a>
+</div>
 
 <div class="hero" id="home">
   <div class="hero-bg"></div>
@@ -441,6 +445,14 @@ let currentSearch = "";
 let orderPlaced = false;
 
 document.getElementById("year").textContent = new Date().getFullYear();
+
+/* Mobile Menu Logic */
+const mobileNav = document.getElementById("mobileNav");
+document.getElementById("menuToggle").addEventListener("click", () => mobileNav.classList.add("open"));
+document.getElementById("mobileClose").addEventListener("click", () => mobileNav.classList.remove("open"));
+document.querySelectorAll("[data-close]").forEach(el => {
+  el.addEventListener("click", () => mobileNav.classList.remove("open"));
+});
 
 /* Render Category Icons */
 const catGrid = document.getElementById("catGrid");

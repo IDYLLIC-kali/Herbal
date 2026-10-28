@@ -174,7 +174,6 @@ const ICONS = {
   jar: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="6" y="6" width="12" height="16" rx="2"/><rect x="5" y="3" width="14" height="3" rx="1"/><path d="M9 11h6"/></svg>`
 };
 
-// Baseline products (these are always loaded, custom ones are added on top)
 const BASE_PRODUCTS = [
   {id:1,  name:"Moringa Leaves",    cat:"powders", size:"100g",  price:400, icon:"leaf"},
   {id:2,  name:"Lavender Essential Oil", cat:"oils", size:"10ml", price:750, icon:"drop"},
@@ -217,13 +216,16 @@ function renderAdmin(){
   const allProducts = getAllProducts();
   
   adminGrid.innerHTML = allProducts.map(p => {
+    // Only allow deleting products that are in the custom list (id > 1000000000000)
+    const isCustom = p.id > 1000000000000;
+    
     return `
     <div class="admin-card">
       <div class="admin-thumb">
         ${photos[p.id] ? `<img src="${photos[p.id]}" alt="${p.name}">` : (ICONS[p.icon] || ICONS.leaf)}
       </div>
       <div class="admin-info">
-        <div class="admin-name">${p.name} ${p.id > 1000000000000 ? '<span style="font-size:0.65rem; color:var(--brand-gold); background:#fdfaf2; padding:2px 4px; border-radius:2px; margin-left:4px;">NEW</span>' : ''}</div>
+        <div class="admin-name">${p.name} ${isCustom ? '<span style="font-size:0.65rem; color:var(--brand-gold); background:#fdfaf2; padding:2px 4px; border-radius:2px; margin-left:4px;">NEW</span>' : ''}</div>
         <div class="admin-meta">${catLabel(p.cat)} · ${p.size || 'N/A'}</div>
         
         <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
@@ -236,7 +238,8 @@ function renderAdmin(){
             ${photos[p.id] ? "Replace Photo" : "Upload Photo"}
             <input type="file" accept="image/*" data-upload="${p.id}">
           </label>
-          ${photos[p.id] ? `<button style="font-size:0.75rem; color:#b4472f; text-decoration:underline;" data-clear="${p.id}">Remove</button>` : ""}
+          ${photos[p.id] ? `<button style="font-size:0.75rem; color:#b4472f; text-decoration:underline;" data-clear-photo="${p.id}">Remove Photo</button>` : ""}
+          ${isCustom ? `<button style="font-size:0.75rem; background:#b4472f; color:#fff; padding:6px 12px; border-radius:var(--radius);" data-delete-product="${p.id}">Delete Product</button>` : ""}
         </div>
       </div>
     </div>
@@ -284,14 +287,29 @@ function renderAdmin(){
     });
   });
 
-  adminGrid.querySelectorAll("[data-clear]").forEach(btn => {
+  adminGrid.querySelectorAll("[data-clear-photo]").forEach(btn => {
     btn.addEventListener("click", async () => {
       if(!confirm("Remove this product photo?")) return;
-      const id = Number(btn.dataset.clear);
+      const id = Number(btn.dataset.clearPhoto);
       try {
         await fetch(`/api/upload/${id}`, { method: "DELETE", credentials: "same-origin" });
         delete photos[id];
         showToast("Photo removed");
+        renderAdmin();
+      } catch(err){ showToast("Delete failed", true); }
+    });
+  });
+
+  adminGrid.querySelectorAll("[data-delete-product]").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      if(!confirm("Are you sure you want to completely DELETE this product from the store? This cannot be undone.")) return;
+      const id = Number(btn.dataset.deleteProduct);
+      try {
+        const res = await fetch(`/api/products/${id}`, { method: "DELETE", credentials: "same-origin" });
+        if(!res.ok) throw new Error("Delete failed");
+        customProducts = customProducts.filter(p => p.id !== id);
+        delete photos[id];
+        showToast("Product deleted");
         renderAdmin();
       } catch(err){ showToast("Delete failed", true); }
     });
@@ -315,7 +333,6 @@ async function loadFromServer(){
 
 document.getElementById("refreshBtn").addEventListener("click", loadFromServer);
 
-/* Log out and redirect when clicking "View Storefront" */
 function logOutAndRedirect(url) {
   fetch("/admin/", { headers: { "Authorization": "Basic " + btoa("logout:logout") }, cache: "no-store" })
     .finally(() => { window.location.href = url; });
@@ -329,7 +346,6 @@ document.getElementById("logoutBtn").addEventListener("click", () => {
   logOutAndRedirect("/");
 });
 
-/* Add Product Form */
 document.getElementById("addProductForm").addEventListener("submit", async (e) => {
   e.preventDefault();
   const msg = document.getElementById("addProdMsg");
@@ -364,7 +380,6 @@ document.getElementById("addProductForm").addEventListener("submit", async (e) =
   }
 });
 
-/* Change Credentials Form */
 document.getElementById("changeCredsForm").addEventListener("submit", async (e) => {
   e.preventDefault();
   const msg = document.getElementById("credsMsg");

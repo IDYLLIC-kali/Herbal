@@ -152,7 +152,6 @@ app.post("/api/products", basicAuth, async (req, res) => {
   if(!name || !price) return res.status(400).json({ error: "Name and price required" });
   
   const products = readJSON(PRODUCTS_FILE, []);
-  // Generate a new ID based on timestamp to avoid clashes
   const newId = Date.now();
   const newProduct = { id: newId, name, cat: cat || "powders", size: size || "", price: Number(price), desc, icon: "leaf" };
   
@@ -160,6 +159,34 @@ app.post("/api/products", basicAuth, async (req, res) => {
   writeJSON(PRODUCTS_FILE, products);
   await pushToCloudinary(products, "custom_products");
   res.json({ ok: true, product: newProduct });
+});
+
+// DELETE a custom product
+app.delete("/api/products/:id", basicAuth, async (req, res) => {
+  const id = Number(req.params.id);
+  let products = readJSON(PRODUCTS_FILE, []);
+  
+  const initialLength = products.length;
+  products = products.filter(p => p.id !== id);
+  
+  if (products.length === initialLength) {
+    return res.status(404).json({ error: "Product not found in custom list" });
+  }
+
+  writeJSON(PRODUCTS_FILE, products);
+  await pushToCloudinary(products, "custom_products");
+  
+  // Also delete its photo if it exists
+  try {
+    await cloudinary.uploader.destroy(`herbal-haven/product-${id}`);
+    const photos = readJSON(PHOTOS_FILE, {});
+    if(photos[id]) {
+      delete photos[id];
+      writeJSON(PHOTOS_FILE, photos);
+    }
+  } catch(e){}
+
+  res.json({ ok: true });
 });
 
 const ALLOWED = new Set(["image/jpeg","image/png","image/webp","image/gif","image/avif"]);
