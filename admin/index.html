@@ -35,9 +35,6 @@
   .btn-ghost:hover{background:var(--bg-light-sage);}
   .btn[disabled]{opacity:0.5; cursor:not-allowed;}
 
-  .admin-note{background:var(--bg-light-sage); border-left:3px solid var(--brand-gold); border-radius:var(--radius); padding:16px 20px; font-size:0.85rem; margin-bottom:30px;}
-  .admin-note strong{color:var(--brand-green);}
-
   .admin-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:20px;}
   .admin-card{background:var(--bg-card); border:1px solid var(--border-color); border-radius:8px; padding:16px; display:flex; gap:16px; align-items:center; box-shadow:var(--shadow);}
   .admin-thumb{width:80px; height:80px; border-radius:4px; background:#f0f2ed; flex-shrink:0; display:flex; align-items:center; justify-content:center; padding:12px; color:var(--brand-green); overflow:hidden; position:relative;}
@@ -56,8 +53,8 @@
   .form-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:16px; margin-top:20px;}
   .field{display:flex; flex-direction:column; gap:6px;}
   .field label{font-size:0.75rem; font-weight:600; color:var(--brand-green); text-transform:uppercase; letter-spacing:0.05em;}
-  .field input{padding:10px 14px; border-radius:4px; border:1px solid var(--border-color); background:var(--bg-main); font-size:0.9rem; outline:none;}
-  .field input:focus{border-color:var(--brand-green);}
+  .field input, .field select, .field textarea{padding:10px 14px; border-radius:4px; border:1px solid var(--border-color); background:var(--bg-main); font-size:0.9rem; outline:none; font-family:inherit;}
+  .field input:focus, .field select:focus, .field textarea:focus{border-color:var(--brand-green);}
   .form-actions{margin-top:20px; display:flex; gap:12px; align-items:center;}
   .form-msg{font-size:0.85rem;}
   .form-msg.ok{color:var(--brand-green); font-weight:500;}
@@ -87,16 +84,51 @@
     </div>
   </div>
 
-  <div class="admin-note">
-    <strong>Live Dashboard:</strong> Upload photos and update prices below. Changes are backed up to Cloudinary automatically.
-  </div>
-
   <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
     <h2 style="font-size:1.6rem;">Product Catalog</h2>
     <button class="btn btn-ghost" id="refreshBtn">Refresh Data</button>
   </div>
 
   <div class="admin-grid" id="adminGrid"></div>
+
+  <!-- Add Product Section -->
+  <div class="settings-card">
+    <h2>Add New Product</h2>
+    <p>Post a product that is currently not in the catalogue. It will appear on the storefront immediately.</p>
+    <form id="addProductForm">
+      <div class="form-grid">
+        <div class="field">
+          <label>Product Name</label>
+          <input type="text" id="newName" required placeholder="e.g. Lavender Oil">
+        </div>
+        <div class="field">
+          <label>Category</label>
+          <select id="newCat" required>
+            <option value="oils">Essential Oils</option>
+            <option value="powders">Herbs & Powders</option>
+            <option value="teas">Herbal Teas</option>
+            <option value="nuts">Carrier Oils</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Size (e.g. 100ml, 50g)</label>
+          <input type="text" id="newSize" placeholder="Optional">
+        </div>
+        <div class="field">
+          <label>Price (KSh)</label>
+          <input type="number" id="newPrice" required min="1">
+        </div>
+        <div class="field" style="grid-column: 1 / -1;">
+          <label>Short Description</label>
+          <input type="text" id="newDesc" placeholder="e.g. Calms the mind and promotes relaxation.">
+        </div>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" id="addProductBtn">Post Product</button>
+        <span class="form-msg" id="addProdMsg"></span>
+      </div>
+    </form>
+  </div>
 
   <div class="settings-card">
     <h2>Account Settings</h2>
@@ -142,7 +174,8 @@ const ICONS = {
   jar: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="6" y="6" width="12" height="16" rx="2"/><rect x="5" y="3" width="14" height="3" rx="1"/><path d="M9 11h6"/></svg>`
 };
 
-const PRODUCTS = [
+// Baseline products (these are always loaded, custom ones are added on top)
+const BASE_PRODUCTS = [
   {id:1,  name:"Moringa Leaves",    cat:"powders", size:"100g",  price:400, icon:"leaf"},
   {id:2,  name:"Lavender Essential Oil", cat:"oils", size:"10ml", price:750, icon:"drop"},
   {id:3,  name:"Coconut Carrier Oil", cat:"nuts", size:"250ml", price:650, icon:"bottle"},
@@ -162,7 +195,6 @@ const PRODUCTS = [
   {id:17, name:"Almonds",           cat:"powders", size:"250g",  price:650, icon:"jar"}
 ];
 
-const catLabel = id => (CATEGORIES.find(c => c.id === id) || {}).label || id;
 const CATEGORIES = [
   {id:"oils",    label:"Oils"},
   {id:"powders", label:"Herbs & Powders"},
@@ -170,20 +202,29 @@ const CATEGORIES = [
   {id:"nuts",    label:"Carrier Oils & Nuts"}
 ];
 
+const catLabel = id => (CATEGORIES.find(c => c.id === id) || {}).label || id;
+
 let photos = {};
 let prices = {};
+let customProducts = [];
 const adminGrid = document.getElementById("adminGrid");
 
+function getAllProducts() {
+  return [...BASE_PRODUCTS, ...customProducts];
+}
+
 function renderAdmin(){
-  adminGrid.innerHTML = PRODUCTS.map(p => {
+  const allProducts = getAllProducts();
+  
+  adminGrid.innerHTML = allProducts.map(p => {
     return `
     <div class="admin-card">
       <div class="admin-thumb">
         ${photos[p.id] ? `<img src="${photos[p.id]}" alt="${p.name}">` : (ICONS[p.icon] || ICONS.leaf)}
       </div>
       <div class="admin-info">
-        <div class="admin-name">${p.name}</div>
-        <div class="admin-meta">${catLabel(p.cat)} · ${p.size}</div>
+        <div class="admin-name">${p.name} ${p.id > 1000000000000 ? '<span style="font-size:0.65rem; color:var(--brand-gold); background:#fdfaf2; padding:2px 4px; border-radius:2px; margin-left:4px;">NEW</span>' : ''}</div>
+        <div class="admin-meta">${catLabel(p.cat)} · ${p.size || 'N/A'}</div>
         
         <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
           <span style="font-size:0.75rem; font-weight:600; color:var(--text-muted);">Price (KSh):</span>
@@ -260,27 +301,70 @@ function renderAdmin(){
 async function loadFromServer(){
   if(IS_FILE_PROTOCOL){ renderAdmin(); return; }
   try {
-    const [photosRes, pricesRes] = await Promise.all([
+    const [photosRes, pricesRes, productsRes] = await Promise.all([
       fetch("/api/photos", { cache: "no-store", credentials: "same-origin" }),
-      fetch("/api/prices", { cache: "no-store", credentials: "same-origin" })
+      fetch("/api/prices", { cache: "no-store", credentials: "same-origin" }),
+      fetch("/api/products", { cache: "no-store", credentials: "same-origin" })
     ]);
     if(photosRes.ok) photos = await photosRes.json();
     if(pricesRes.ok) prices = await pricesRes.json();
+    if(productsRes.ok) customProducts = await productsRes.json();
   } catch(e){ showToast("Couldn't reach server", true); }
   renderAdmin();
 }
 
 document.getElementById("refreshBtn").addEventListener("click", loadFromServer);
 
+/* Log out and redirect when clicking "View Storefront" */
+function logOutAndRedirect(url) {
+  fetch("/admin/", { headers: { "Authorization": "Basic " + btoa("logout:logout") }, cache: "no-store" })
+    .finally(() => { window.location.href = url; });
+}
+
 document.getElementById("viewStorefrontBtn").addEventListener("click", () => {
-  if(!IS_FILE_PROTOCOL) window.location.href = window.location.origin + "/";
+  logOutAndRedirect(window.location.origin + "/");
 });
 
 document.getElementById("logoutBtn").addEventListener("click", () => {
-  fetch("/admin/", { headers: { "Authorization": "Basic " + btoa("logout:logout") }, cache: "no-store" })
-    .finally(() => { window.location.href = "/"; });
+  logOutAndRedirect("/");
 });
 
+/* Add Product Form */
+document.getElementById("addProductForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const msg = document.getElementById("addProdMsg");
+  msg.className = "form-msg"; msg.textContent = "";
+  const btn = document.getElementById("addProductBtn");
+  btn.disabled = true; btn.textContent = "Posting…";
+
+  const name = document.getElementById("newName").value.trim();
+  const cat = document.getElementById("newCat").value;
+  const size = document.getElementById("newSize").value.trim();
+  const price = Number(document.getElementById("newPrice").value);
+  const desc = document.getElementById("newDesc").value.trim();
+
+  try {
+    const res = await fetch("/api/products", {
+      method: "POST", headers: { "Content-Type": "application/json" }, credentials: "same-origin",
+      body: JSON.stringify({ name, cat, size, price, desc })
+    });
+    const data = await res.json();
+    if(!res.ok) throw new Error(data.error || "Failed to add product");
+    
+    msg.classList.add("ok"); msg.textContent = "Product added successfully!";
+    e.target.reset();
+    customProducts.push(data.product);
+    renderAdmin();
+    showToast("Product added");
+  } catch(err) {
+    msg.classList.add("err"); msg.textContent = err.message;
+    showToast("Error adding product", true);
+  } finally {
+    btn.disabled = false; btn.textContent = "Post Product";
+  }
+});
+
+/* Change Credentials Form */
 document.getElementById("changeCredsForm").addEventListener("submit", async (e) => {
   e.preventDefault();
   const msg = document.getElementById("credsMsg");

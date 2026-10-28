@@ -224,7 +224,6 @@
 <header>
   <div class="header-inner">
     <a href="#home" class="logo" aria-label="Betti Naturals home">
-      <!-- Uses the logo image you saved -->
       <img src="logo.jpg" alt="Betti Naturals" class="logo-img">
     </a>
     <nav class="main-nav" id="mainNav">
@@ -328,7 +327,6 @@
   <div class="footer-top">
     <div class="footer-brand">
       <a href="#home" class="logo">
-        <!-- Uses the logo image you saved -->
         <img src="logo.jpg" alt="Betti Naturals" class="footer-logo-img">
       </a>
       <p>Bringing you natural care, wellness, and beauty, straight from the earth.</p>
@@ -351,7 +349,6 @@
       <h4>Contact</h4>
       <a href="#">hello@bettinaturals.com</a>
       <a href="#">+254 711 778 233</a>
-      <div style="margin-top:20px; font-size:0.85rem; color:#a8b8a3;">We accept<br><span style="color:#fff; font-weight:600;">M-PESA &bull; VISA &bull; Mastercard</span></div>
     </div>
   </div>
   <div class="footer-bottom">
@@ -413,7 +410,7 @@ const CATEGORIES = [
   {id:"oils", label:"Natural Skin Oils", icon:"flower"}
 ];
 
-const PRODUCTS = [
+const BASE_PRODUCTS = [
   {id:1,  name:"Moringa Leaves",    cat:"powders", size:"100g",  price:400, icon:"leaf", featured:true, badge:"Bestseller", desc:"Rich in nutrients, supports immunity and energy."},
   {id:2,  name:"Lavender Essential Oil", cat:"oils", size:"10ml", price:750, icon:"drop", featured:true, desc:"Calms the mind, promotes relaxation."},
   {id:3,  name:"Coconut Carrier Oil", cat:"nuts", size:"250ml", price:650, icon:"bottle", featured:true, desc:"Deeply moisturises and nourishes skin and hair."},
@@ -438,6 +435,7 @@ const catLabel = id => (CATEGORIES.find(c => c.id === id) || {}).label || id;
 
 let photos = {};
 let prices = {};
+let customProducts = [];
 let cart = {};
 let currentCat = "all";
 let currentSearch = "";
@@ -458,6 +456,10 @@ catGrid.innerHTML = CATEGORIES.map((c, i) => `
 catGrid.querySelectorAll("[data-goto-cat]").forEach(el => {
   el.addEventListener("click", () => goToShop(el.dataset.gotoCat));
 });
+
+function getAllProducts() {
+  return [...BASE_PRODUCTS, ...customProducts];
+}
 
 function photoMarkup(p){
   if(photos[p.id]) return `<img src="${photos[p.id]}" alt="${p.name}" loading="lazy">`;
@@ -486,7 +488,7 @@ function productCard(p){
 
 function renderFeatured(){
   document.getElementById("featuredGrid").innerHTML =
-    PRODUCTS.filter(p => p.featured).map(productCard).join("");
+    getAllProducts().filter(p => p.featured).map(productCard).join("");
 }
 
 const filterRow = document.getElementById("filterRow");
@@ -507,7 +509,7 @@ renderFilters();
 
 function renderShop(){
   const term = currentSearch.trim().toLowerCase();
-  const list = PRODUCTS.filter(p=>{
+  const list = getAllProducts().filter(p=>{
     const matchesCat = currentCat === "all" || p.cat === currentCat;
     const matchesTerm = !term || p.name.toLowerCase().includes(term) || catLabel(p.cat).toLowerCase().includes(term);
     return matchesCat && matchesTerm;
@@ -532,12 +534,14 @@ function renderShop(){
 
 async function loadPhotosFromServer(){
   try {
-    const [photosRes, pricesRes] = await Promise.all([
+    const [photosRes, pricesRes, productsRes] = await Promise.all([
       fetch("/api/photos", { cache: "no-store" }),
-      fetch("/api/prices", { cache: "no-store" })
+      fetch("/api/prices", { cache: "no-store" }),
+      fetch("/api/products", { cache: "no-store" })
     ]);
     if(photosRes.ok) photos = await photosRes.json();
     if(pricesRes.ok) prices = await pricesRes.json();
+    if(productsRes.ok) customProducts = await productsRes.json();
   } catch(e){ /* offline */ }
   renderFeatured();
   renderShop();
@@ -579,7 +583,7 @@ function addToCart(id){
   cart[id] = (cart[id]||0) + 1;
   orderPlaced = false;
   updateCartUI();
-  const p = PRODUCTS.find(x=>x.id===id);
+  const p = getAllProducts().find(x=>x.id===id);
   showToast(`${p.name} added to cart`);
 }
 function changeQty(id, delta){
@@ -596,7 +600,7 @@ function cartCountTotal(){
 }
 function cartSubtotal(){
   return Object.entries(cart).reduce((sum,[id,qty])=>{
-    const p = PRODUCTS.find(x=>x.id===Number(id));
+    const p = getAllProducts().find(x=>x.id===Number(id));
     const currentPrice = prices[p.id] || p.price;
     return sum + (currentPrice * qty);
   },0);
@@ -608,7 +612,7 @@ function buildWhatsAppMessage(){
   lines.push("Hi Betti Naturals, I'd like to order:");
   lines.push("");
   ids.forEach(id => {
-    const p = PRODUCTS.find(x => x.id === Number(id));
+    const p = getAllProducts().find(x => x.id === Number(id));
     if(!p) return;
     const qty = cart[id];
     const lineTotal = (prices[p.id] || p.price) * qty;
@@ -654,7 +658,7 @@ function updateCartUI(){
   }
 
   itemsEl.innerHTML = ids.map(id=>{
-    const p = PRODUCTS.find(x=>x.id===Number(id));
+    const p = getAllProducts().find(x=>x.id===Number(id));
     const qty = cart[id];
     const pPrice = prices[p.id] || p.price;
     return `
